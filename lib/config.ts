@@ -95,7 +95,8 @@ export const REVIEWS: { name: string; where: string; text: { th: string; en: str
 
 /** รูปไดคัตประจำหมวด (รูปเดียว ไม่ผูกกับคันใดคันหนึ่ง) — ไม่มี = ใช้ภาพวาด · วางไฟล์ใน public/vehicles/ */
 export const VEHICLE_IMAGE: Partial<Record<VehicleType, { src: string; w: number; h: number }>> = {
-  VAN_VIP8: { src: "/vehicles/vip8-cutout.png", w: 437, h: 324 },
+  VAN_VIP8: { src: "/vehicles/vip8-cutout.png", w: 447, h: 334 },
+  VAN_VIP10: { src: "/vehicles/vip10-cutout.png", w: 1001, h: 876 },
 };
 
 /** รูปบรรยากาศจริง (หน้าแรก "บรรยากาศในรถ") — เพิ่มได้เรื่อย ๆ วางไฟล์ใน public/gallery/ */
