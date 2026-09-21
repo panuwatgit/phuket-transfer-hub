@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phuket Transfer Hub — คุยง่าย ราคาถูกใจ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#14B8A6; --teal-deep:#0F9488; --teal-wash:#E6FAF7;
+  --coral:#FF6B6B; --coral-deep:#E84E4E; --coral-wash:#FFECEC;
+  --sun:#FFC93C; --sun-wash:#FFF6DA;
+  --cream:#FFFBF5; --white:#fff;
+  --ink:#1A2B3C; --ink-soft:#5B6B7A; --ink-faint:#9AA8B4; --line:#EEE6DA;
+  --r:20px; --r-sm:14px;
+  --shadow:0 10px 30px -12px rgba(26,43,60,.18);
+  --shadow-lg:0 30px 60px -20px rgba(26,43,60,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Sarabun',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;overflow-x:hidden}
+h1,h2,h3,h4,.kanit{font-family:'Kanit',sans-serif;line-height:1.2}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-family:'Kanit';font-weight:500;font-size:16px;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s;position:relative;overflow:hidden}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--coral);color:#fff;box-shadow:0 10px 24px -8px rgba(255,107,107,.6)}
+.btn-primary:hover{background:var(--coral-deep);transform:translateY(-2px);box-shadow:0 16px 30px -8px rgba(255,107,107,.7)}
+.btn-line{background:#06C755;color:#fff;box-shadow:0 10px 24px -8px rgba(6,199,85,.5)}
+.btn-line:hover{transform:translateY(-2px)}
+.btn-ghost{background:#fff;color:var(--ink);border:2px solid var(--line)}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal-deep)}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{background:var(--teal-deep)}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(255,251,245,.8);border-bottom:1px solid rgba(238,230,218,.7)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Kanit';font-weight:600;font-size:18px}
+.logo .mark{width:40px;height:40px;border-radius:12px;background:var(--teal);display:grid;place-items:center;color:#fff;font-size:14px;letter-spacing:.5px;transform:rotate(-6deg);box-shadow:0 8px 16px -6px rgba(20,184,166,.6)}
+.logo small{display:block;font-size:11px;font-weight:400;color:var(--ink-soft);line-height:1}
+nav ul{display:flex;gap:28px;list-style:none;font-weight:500}
+nav ul a{position:relative;padding:6px 0}
+nav ul a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--teal);border-radius:2px;transition:width .25s}
+nav ul a:hover::after{width:100%}
+.nav-cta{display:flex;gap:10px}
+.nav-cta .btn{padding:10px 18px;font-size:15px}
+@media(max-width:860px){nav ul,.nav-cta .btn-ghost{display:none}}
+
+/* hero */
+.hero{position:relative;padding:80px 0 60px;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55;animation:drift 18s ease-in-out infinite;pointer-events:none}
+.b1{width:420px;height:420px;background:var(--teal);top:-120px;left:-120px}
+.b2{width:360px;height:360px;background:var(--sun);top:40px;right:-80px;animation-delay:-6s}
+.b3{width:300px;height:300px;background:var(--coral);bottom:-140px;left:40%;animation-delay:-12s;opacity:.4}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.08)}66%{transform:translate(-30px,25px) scale(.95)}}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:6px 14px;border-radius:999px;font-size:14px;font-weight:500;color:var(--teal-deep);box-shadow:var(--shadow)}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(20,184,166,.6)}70%{box-shadow:0 0 0 10px rgba(20,184,166,0)}100%{box-shadow:0 0 0 0 rgba(20,184,166,0)}}
+.hero h1{font-size:clamp(40px,6vw,68px);font-weight:700;margin:18px 0 14px;letter-spacing:-.5px}
+.hero h1 .w{display:inline-block;opacity:0;transform:translateY(24px);animation:up .6s cubic-bezier(.2,.8,.2,1) forwards}
+.hero h1 .hl{color:var(--coral);position:relative}
+.hero h1 .hl::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:14px;background:var(--sun);z-index:-1;border-radius:6px;transform:scaleX(0);transform-origin:left;animation:underline .6s .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes underline{to{transform:scaleX(1)}}
+@keyframes up{to{opacity:1;transform:none}}
+.hero p.lead{font-size:19px;color:var(--ink-soft);max-width:520px;margin-bottom:28px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.trust{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:var(--shadow)}
+.chip i{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:12px;color:#fff}
+.chip i.t{background:var(--teal)} .chip i.c{background:var(--coral)} .chip i.s{background:var(--sun);color:var(--ink)}
+.van-stage{position:relative;height:380px;display:grid;place-items:center}
+.van-stage .ring{position:absolute;width:340px;height:340px;border-radius:50%;background:#fff;box-shadow:var(--shadow-lg)}
+.van-stage .ring::before{content:"";position:absolute;inset:24px;border-radius:50%;border:2px dashed var(--teal-wash);animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.van{position:relative;width:400px;animation:float 5s ease-in-out infinite;transition:transform .15s ease-out;will-change:transform}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -14px}}
+.van .shadow{position:absolute;left:12%;right:12%;bottom:-10px;height:22px;border-radius:50%;background:rgba(26,43,60,.15);filter:blur(8px);animation:shadow 5s ease-in-out infinite}
+@keyframes shadow{0%,100%{transform:scaleX(1);opacity:.9}50%{transform:scaleX(.85);opacity:.6}}
+.tag{position:absolute;background:#fff;padding:8px 14px;border-radius:12px;font-family:'Kanit';font-weight:500;font-size:14px;box-shadow:var(--shadow);animation:float 6s ease-in-out infinite}
+.tag.t1{top:20px;left:0;animation-delay:-2s;color:var(--teal-deep)}
+.tag.t2{bottom:30px;right:0;animation-delay:-4s;color:var(--coral-deep)}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}.van-stage{height:300px}.van{width:300px}.van-stage .ring{width:260px;height:260px}}
+
+/* quick form */
+.quick{margin-top:-10px;position:relative;z-index:2}
+.quick .card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow-lg);padding:18px;display:grid;grid-template-columns:1.2fr 1.2fr 1fr .8fr auto;gap:12px;align-items:end;border:1px solid var(--line)}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;letter-spacing:.3px}
+.field .in{display:flex;align-items:center;gap:8px;background:var(--cream);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:15px;transition:border .2s,box-shadow .2s}
+.field .in:focus-within{border-color:var(--teal);box-shadow:0 0 0 4px rgba(20,184,166,.15)}
+.field input,.field select{border:0;background:transparent;font:inherit;width:100%;outline:0;color:var(--ink)}
+@media(max-width:860px){.quick .card{grid-template-columns:1fr 1fr}.quick .card .btn{grid-column:1/-1;justify-content:center}}
+
+/* sections */
+section{padding:90px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 48px}
+.sec-head .kicker{display:inline-block;color:var(--teal-deep);font-family:'Kanit';font-weight:500;font-size:14px;background:var(--teal-wash);padding:4px 12px;border-radius:999px;margin-bottom:12px}
+.sec-head h2{font-size:clamp(30px,4vw,42px);font-weight:600;margin-bottom:12px}
+.sec-head p{color:var(--ink-soft);font-size:17px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* vehicles */
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:1000px){.vgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.vgrid{grid-template-columns:1fr}}
+.vcard{background:#fff;border-radius:var(--r);padding:22px;border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s;transform-style:preserve-3d;position:relative;overflow:hidden}
+.vcard::before{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(20,184,166,.12),transparent 40%);opacity:0;transition:opacity .3s}
+.vcard:hover::before{opacity:1}
+.vcard:hover{box-shadow:var(--shadow-lg)}
+.vcard .badge{position:absolute;top:16px;right:16px;font-family:'Kanit';font-size:12px;font-weight:500;padding:4px 10px;border-radius:999px;background:var(--sun-wash);color:#8A6200}
+.vcard .badge.pop{background:var(--coral-wash);color:var(--coral-deep)}
+.vcard .art{height:110px;display:grid;place-items:center;margin-bottom:14px}
+.vcard .art svg{width:150px;transition:transform .3s}
+.vcard:hover .art svg{transform:translateX(6px)}
+.vcard h3{font-size:22px;font-weight:600}
+.vcard .sub{color:var(--ink-soft);font-size:14px;margin:2px 0 14px}
+.seats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.seats span{width:14px;height:14px;border-radius:4px;background:var(--line);transition:background .3s,transform .3s;transform:scale(.6)}
+.vcard.in .seats span{background:var(--teal);transform:scale(1)}
+.meta{display:flex;gap:14px;font-size:13px;color:var(--ink-soft);margin-bottom:16px}
+.meta b{color:var(--ink);font-weight:600}
+.vcard .btn{width:100%;justify-content:center;padding:12px}
+
+/* services */
+.services{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:1000px){.sgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.sgrid{grid-template-columns:1fr}}
+.scard{padding:26px;border-radius:var(--r);background:var(--cream);border:1px solid var(--line);transition:transform .25s,border-color .25s,background .25s;position:relative}
+.scard:hover{transform:translateY(-6px);border-color:var(--teal);background:#fff}
+.scard .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;margin-bottom:16px;font-size:24px;background:var(--teal-wash)}
+.scard:nth-child(2) .ic{background:var(--sun-wash)} .scard:nth-child(3) .ic{background:var(--coral-wash)} .scard:nth-child(4) .ic{background:#EEF2FF}
+.scard h3{font-size:19px;font-weight:600;margin-bottom:6px}
+.scard p{font-size:14.5px;color:var(--ink-soft)}
+.scard .note{margin-top:12px;font-size:13px;display:flex;flex-wrap:wrap;gap:6px}
+.scard .note span{background:#fff;border:1px solid var(--line);padding:3px 9px;border-radius:8px;font-weight:500}
+.scard:hover .note span{border-color:var(--teal-wash);background:var(--teal-wash);color:var(--teal-deep)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+.step{text-align:center;padding:10px}
+.step .n{width:64px;height:64px;border-radius:22px;margin:0 auto 16px;display:grid;place-items:center;font-family:'Kanit';font-weight:600;font-size:22px;color:#fff;background:var(--teal);box-shadow:0 12px 24px -8px rgba(20,184,166,.6);transition:transform .3s}
+.step:nth-child(2) .n{background:var(--sun);color:var(--ink);box-shadow:0 12px 24px -8px rgba(255,201,60,.7)}
+.step:nth-child(3) .n{background:var(--coral);box-shadow:0 12px 24px -8px rgba(255,107,107,.7)}
+.step:nth-child(4) .n{background:var(--ink)}
+.step:hover .n{transform:rotate(-8deg) scale(1.08)}
+.step h3{font-size:19px;font-weight:600;margin-bottom:6px}
+.step p{font-size:14.5px;color:var(--ink-soft)}
+.steps-line{height:3px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px);margin:0 8% 30px;position:relative;overflow:hidden}
+.steps-line::after{content:"";position:absolute;top:-4px;width:12px;height:12px;border-radius:50%;background:var(--coral);left:-12px;animation:run 4s linear infinite}
+@keyframes run{to{left:100%}}
+
+/* routes */
+.routes{background:var(--ink);color:#fff;border-radius:40px;margin:0 20px}
+.routes .sec-head h2,.routes .sec-head p{color:#fff}
+.routes .sec-head p{opacity:.7}
+.routes .sec-head .kicker{background:rgba(255,255,255,.1);color:var(--sun)}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:860px){.rgrid{grid-template-columns:1fr}}
+.rcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:24px;transition:background .25s,transform .25s}
+.rcard:hover{background:rgba(255,255,255,.1);transform:translateY(-4px)}
+.rcard .pts{display:flex;justify-content:space-between;font-family:'Kanit';font-weight:500;font-size:18px;margin-bottom:10px}
+.rcard svg{width:100%;height:40px;overflow:visible}
+.rcard .path{stroke:rgba(255,255,255,.25);stroke-width:2;stroke-dasharray:6 6;fill:none}
+.rcard .car{offset-path:path("M8 20 C 80 -10, 200 50, 290 20");animation:go 3.5s ease-in-out infinite;offset-rotate:0deg}
+@keyframes go{0%{offset-distance:0%}100%{offset-distance:100%}}
+.rcard .info{display:flex;justify-content:space-between;font-size:14px;opacity:.75;margin-top:8px}
+.rcard .info b{color:var(--sun);font-weight:600}
+
+/* stats + policy */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:48px}
+@media(max-width:700px){.stats{grid-template-columns:1fr}}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px;text-align:center;box-shadow:var(--shadow)}
+.stat .num{font-family:'Kanit';font-size:44px;font-weight:600;color:var(--teal-deep);line-height:1}
+.stat .num.c{color:var(--coral)} .stat .num.s{color:#C99400}
+.stat p{color:var(--ink-soft);margin-top:6px;font-size:15px}
+.policy{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:860px){.policy{grid-template-columns:1fr}}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.pcard h3{font-size:19px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.pcard h3 i{font-style:normal;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--teal-wash);font-size:16px}
+.pcard ul{list-style:none;display:grid;gap:8px;font-size:15px}
+.pcard li{display:flex;gap:10px;align-items:flex-start}
+.pcard li::before{content:"✓";color:var(--teal);font-weight:700;flex-shrink:0}
+.pcard li.x::before{content:"✕";color:var(--coral)}
+
+/* faq */
+.faq{max-width:760px;margin:0 auto}
+details{background:#fff;border:1px solid var(--line);border-radius:16px;padding:0 22px;margin-bottom:10px;transition:box-shadow .2s}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;list-style:none;font-family:'Kanit';font-weight:500;font-size:17px;padding:18px 0;display:flex;justify-content:space-between;align-items:center}
+summary::after{content:"+";font-size:22px;color:var(--teal);transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 18px;color:var(--ink-soft);font-size:15px}
+
+/* final cta */
+.final{padding:0 20px 90px}
+.final .box{background:linear-gradient(135deg,var(--teal) 0%,#2DD4BF 100%);border-radius:36px;padding:64px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.final .box::before,.final .box::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.12)}
+.final .box::before{width:300px;height:300px;top:-120px;right:-80px}
+.final .box::after{width:200px;height:200px;bottom:-90px;left:-40px}
+.final h2{font-size:clamp(30px,4vw,44px);font-weight:600;margin-bottom:10px;position:relative}
+.final p{opacity:.9;font-size:17px;margin-bottom:26px;position:relative}
+.final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+.final .btn-primary{background:#fff;color:var(--teal-deep);box-shadow:0 10px 24px -8px rgba(0,0,0,.25)}
+.final .btn-primary:hover{background:var(--sun-wash)}
+
+footer{background:#fff;border-top:1px solid var(--line);padding:40px 0 100px;font-size:14px;color:var(--ink-soft)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px}
+
+/* mobile sticky */
+.sticky{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;display:none;gap:10px;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);padding:10px;border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
+.sticky .btn{flex:1;justify-content:center;padding:12px}
+@media(max-width:860px){.sticky{display:flex}footer{padding-bottom:110px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo"><span class="mark">PTH</span><span>Phuket Transfer Hub<small>คุยง่าย ราคาถูกใจ</small></span></a>
+    <ul>
+      <li><a href="#vehicles">ประเภทรถ</a></li>
+      <li><a href="#services">บริการ</a></li>
+      <li><a href="#routes">เส้นทาง</a></li>
+      <li><a href="#policy">เงื่อนไข</a></li>
+      <li><a href="#faq">คำถามที่พบบ่อย</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="#">💬 LINE</a>
+      <a class="btn btn-primary" href="request.html">ขอราคา →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="wrap">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> ทีมงานออนไลน์ · ตอบกลับภายใน 30 นาที</span>
+      <h1>
+        <span class="w" style="animation-delay:.05s">คุยง่าย</span>
+        <span class="w hl" style="animation-delay:.2s">ราคาถูกใจ</span><br>
+        <span class="w" style="animation-delay:.35s;font-size:.55em;font-weight:500;color:var(--ink-soft)">ใช้งาน Phuket Transfer Hub</span>
+      </h1>
+      <p class="lead">บอกเราว่าจะไปไหน วันไหน กี่คน — เราหารถตู้ VIP, SUV หรือรถเก๋งพร้อมคนขับที่ตรงใจให้ ทั่วภูเก็ตและภาคใต้ ไม่ต้องเทียบราคาเองหลายเจ้า</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="request.html">ขอราคาฟรี ไม่ผูกมัด →</a>
+        <a class="btn btn-line" href="#">💬 ทักไลน์คุยเลย</a>
+      </div>
+      <div class="trust">
+        <span class="chip"><i class="t">✓</i> รถ + คนขับตรวจสอบแล้ว</span>
+        <span class="chip"><i class="c">฿</i> หารถไม่ได้ คืนเงิน 100%</span>
+        <span class="chip"><i class="s">★</i> ครอบคลุม 14 จังหวัดภาคใต้</span>
+      </div>
+    </div>
+    <div class="van-stage">
+      <div class="ring"></div>
+      <div class="van" id="van">
+        <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 140 L40 92 Q40 70 62 66 L120 52 Q135 48 150 48 L330 48 Q356 48 364 72 L372 100 Q380 105 380 118 L380 140 Q380 150 370 150 L50 150 Q40 150 40 140Z" fill="#14B8A6"/>
+          <path d="M40 118 L380 118 L380 140 Q380 150 370 150 L50 150 Q40 150 40 140Z" fill="#0F9488"/>
+          <path d="M66 76 L120 63 Q133 60 146 60 L160 60 L160 104 L52 104 Q52 82 66 76Z" fill="#DFF7F3"/>
+          <rect x="172" y="60" width="68" height="44" rx="6" fill="#DFF7F3"/>
+          <rect x="252" y="60" width="68" height="44" rx="6" fill="#DFF7F3"/>
+          <path d="M332 60 L340 60 Q352 60 356 72 L366 104 L332 104Z" fill="#DFF7F3"/>
+          <rect x="52" y="110" width="314" height="4" rx="2" fill="#FFC93C"/>
+          <circle cx="110" cy="152" r="26" fill="#1A2B3C"/><circle cx="110" cy="152" r="12" fill="#F5EFE6"/>
+          <circle cx="300" cy="152" r="26" fill="#1A2B3C"/><circle cx="300" cy="152" r="12" fill="#F5EFE6"/>
+          <rect x="372" y="98" width="10" height="14" rx="3" fill="#FFC93C"/>
+          <rect x="34" y="118" width="12" height="14" rx="3" fill="#FF6B6B"/>
+          <rect x="186" y="118" width="60" height="6" rx="3" fill="#0B7A70"/>
+          <text x="200" y="88" font-family="Kanit" font-weight="600" font-size="14" fill="#0F9488" text-anchor="middle" opacity=".0">PTH</text>
+        </svg>
+        <div class="shadow"></div>
+      </div>
+      <div class="tag t1">🛬 สนามบิน → ป่าตอง 45 นาที</div>
+      <div class="tag t2">🚐 VIP 10 ที่นั่ง ว่างวันนี้</div>
+    </div>
+  </div>
+</header>
+
+<div class="quick wrap" id="quick">
+  <div class="card">
+    <div class="field"><label>ประเภทรถ</label><div class="in">🚐 <select id="qType"><option value="VIP8">รถตู้ VIP 8 ที่นั่ง</option><option value="VIP10">รถตู้ VIP 10 ที่นั่ง</option><option value="SUV">SUV 5 ที่นั่ง</option><option value="SEDAN">รถเก๋ง 4 ที่นั่ง</option></select></div></div>
+    <div class="field"><label>ไปไหน</label><div class="in">📍 <input id="qTo" placeholder="เช่น สนามบินภูเก็ต → ป่าตอง"></div></div>
+    <div class="field"><label>วันเดินทาง</label><div class="in">📅 <input type="date" id="qDate"></div></div>
+    <div class="field"><label>กี่คน</label><div class="in">👥 <input type="number" value="4" min="1" id="qPax"></div></div>
+    <a class="btn btn-primary" href="#" id="quickGo">ขอราคา →</a>
+  </div>
+</div>
+
+<section id="vehicles">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">ประเภทรถ</span>
+      <h2>เลือกรถที่ใช่ แล้วเราหาให้</h2>
+      <p>ทุกคันมีคนขับ ตรวจสอบประวัติและสภาพรถแล้ว ที่นั่งนับรวมเบาะหน้า ไม่นับคนขับ</p>
+    </div>
+    <div class="vgrid">
+      <div class="vcard reveal" data-seats="8">
+        <span class="badge pop">ยอดนิยม</span>
+        <div class="art"><svg viewBox="0 0 400 200"><path d="M40 140 L40 92 Q40 70 62 66 L120 52 Q135 48 150 48 L330 48 Q356 48 364 72 L372 100 Q380 105 380 118 L380 140 Q380 150 370 150 L50 150 Q40 150 40 140Z" fill="#14B8A6"/><path d="M66 76 L120 63 Q133 60 146 60 L160 60 L160 104 L52 104 Q52 82 66 76Z" fill="#DFF7F3"/><rect x="172" y="60" width="68" height="44" rx="6" fill="#DFF7F3"/><rect x="252" y="60" width="68" height="44" rx="6" fill="#DFF7F3"/><path d="M332 60 L340 60 Q352 60 356 72 L366 104 L332 104Z" fill="#DFF7F3"/><circle cx="110" cy="152" r="26" fill="#1A2B3C"/><circle cx="110" cy="152" r="12" fill="#F5EFE6"/><circle cx="300" cy="152" r="26" fill="#1A2B3C"/><circle cx="300" cy="152" r="12" fill="#F5EFE6"/></svg></div>
+        <h3>รถตู้ VIP 8 ที่นั่ง</h3>
+        <p class="sub">ครอบครัว · กรุ๊ปเล็ก นั่งสบายเต็มที่</p>
+        <div class="seats"></div>
+        <div class="meta"><span>👥 <b>8</b> ที่นั่ง</span><span>🧳 <b>6</b> ใบใหญ่</span></div>
+        <a class="btn btn-teal" href="request.html?type=VIP8">เลือกคันนี้</a>
+      </div>
+      <div class="vcard reveal" data-seats="10" style="transition-delay:.08s">
+        <span class="badge">กรุ๊ปทัวร์</span>
+        <div class="art"><svg viewBox="0 0 400 200"><path d="M30 140 L30 92 Q30 70 52 66 L110 52 Q125 48 140 48 L340 48 Q366 48 374 72 L382 100 Q390 105 390 118 L390 140 Q390 150 380 150 L40 150 Q30 150 30 140Z" fill="#FFC93C"/><path d="M56 76 L110 63 Q123 60 136 60 L150 60 L150 104 L42 104 Q42 82 56 76Z" fill="#FFF6DA"/><rect x="162" y="60" width="56" height="44" rx="6" fill="#FFF6DA"/><rect x="228" y="60" width="56" height="44" rx="6" fill="#FFF6DA"/><rect x="294" y="60" width="44" height="44" rx="6" fill="#FFF6DA"/><path d="M346 60 L352 60 Q364 60 368 72 L376 104 L346 104Z" fill="#FFF6DA"/><circle cx="100" cy="152" r="26" fill="#1A2B3C"/><circle cx="100" cy="152" r="12" fill="#F5EFE6"/><circle cx="310" cy="152" r="26" fill="#1A2B3C"/><circle cx="310" cy="152" r="12" fill="#F5EFE6"/></svg></div>
+        <h3>รถตู้ VIP 10 ที่นั่ง</h3>
+        <p class="sub">กรุ๊ปทัวร์ · บริษัท · สัมมนา</p>
+        <div class="seats"></div>
+        <div class="meta"><span>👥 <b>10</b> ที่นั่ง</span><span>🧳 <b>8</b> ใบใหญ่</span></div>
+        <a class="btn btn-teal" href="request.html?type=VIP10">เลือกคันนี้</a>
+      </div>
+      <div class="vcard reveal" data-seats="5" style="transition-delay:.16s">
+        <span class="badge">พรีเมียม</span>
+        <div class="art"><svg viewBox="0 0 400 200"><path d="M50 140 L50 100 Q50 84 66 80 L110 58 Q124 50 140 50 L270 50 Q290 50 300 62 L336 92 L362 98 Q380 102 380 118 L380 140 Q380 150 370 150 L60 150 Q50 150 50 140Z" fill="#FF6B6B"/><path d="M118 66 L140 60 L200 60 L200 96 L92 96Z" fill="#FFECEC"/><path d="M212 60 L268 60 Q282 60 290 70 L318 96 L212 96Z" fill="#FFECEC"/><circle cx="120" cy="152" r="28" fill="#1A2B3C"/><circle cx="120" cy="152" r="13" fill="#F5EFE6"/><circle cx="300" cy="152" r="28" fill="#1A2B3C"/><circle cx="300" cy="152" r="13" fill="#F5EFE6"/><rect x="60" y="110" width="30" height="8" rx="4" fill="#1A2B3C" opacity=".2"/></svg></div>
+        <h3>SUV 5 ที่นั่ง</h3>
+        <p class="sub">ครอบครัวเล็ก · ลูกค้าพรีเมียม</p>
+        <div class="seats"></div>
+        <div class="meta"><span>👥 <b>5</b> ที่นั่ง</span><span>🧳 <b>3</b> ใบใหญ่</span></div>
+        <a class="btn btn-teal" href="request.html?type=SUV">เลือกคันนี้</a>
+      </div>
+      <div class="vcard reveal" data-seats="4" style="transition-delay:.24s">
+        <span class="badge">ประหยัด</span>
+        <div class="art"><svg viewBox="0 0 400 200"><path d="M50 140 L50 108 Q50 92 66 88 L120 68 Q134 60 150 60 L250 60 Q270 60 282 72 L316 100 L360 106 Q380 110 380 124 L380 140 Q380 150 370 150 L60 150 Q50 150 50 140Z" fill="#14B8A6"/><path d="M126 76 L150 70 L196 70 L196 100 L100 100Z" fill="#DFF7F3"/><path d="M208 70 L250 70 Q262 70 270 78 L296 100 L208 100Z" fill="#DFF7F3"/><circle cx="120" cy="152" r="26" fill="#1A2B3C"/><circle cx="120" cy="152" r="12" fill="#F5EFE6"/><circle cx="300" cy="152" r="26" fill="#1A2B3C"/><circle cx="300" cy="152" r="12" fill="#F5EFE6"/></svg></div>
+        <h3>รถเก๋ง 4 ที่นั่ง</h3>
+        <p class="sub">รับส่งสนามบิน 1–3 คน คุ้มสุด</p>
+        <div class="seats"></div>
+        <div class="meta"><span>👥 <b>4</b> ที่นั่ง</span><span>🧳 <b>2</b> ใบใหญ่</span></div>
+        <a class="btn btn-teal" href="request.html?type=SEDAN">เลือกคันนี้</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">บริการ</span>
+      <h2>รับงาน 4 แบบ ทั่วภาคใต้</h2>
+      <p>ราคาขึ้นกับรถและเส้นทางจริง เราเสนอราคาให้หลังรับข้อมูล ไม่มีค่าใช้จ่ายแอบแฝง</p>
+    </div>
+    <div class="sgrid">
+      <div class="scard reveal"><div class="ic">🛬</div><h3>รับ-ส่งสนามบิน</h3><p>สนามบินภูเก็ต ↔ ทุกโซน เที่ยวเดียวหรือไป-กลับ รอรับหน้าประตู</p><div class="note"><span>เที่ยวบินไม่บังคับ</span><span>ชำระเต็มหลังตกลงราคา</span></div></div>
+      <div class="scard reveal" style="transition-delay:.08s"><div class="ic">📍</div><h3>รับ-ส่งจุดต่อจุด</h3><p>ในภูเก็ต หรือข้ามจังหวัด กระบี่ พังงา สุราษฎร์ หาดใหญ่</p><div class="note"><span>14 จังหวัดภาคใต้</span></div></div>
+      <div class="scard reveal" style="transition-delay:.16s"><div class="ic">🚐</div><h3>เหมารายวันพร้อมคนขับ</h3><p>เที่ยวได้ทั้งวัน แวะได้ตามใจ 8 ชั่วโมงเต็ม</p><div class="note"><span>8 ชม./วัน</span><span>OT ชม.ละ 300</span><span>ไม่รวมน้ำมัน</span></div></div>
+      <div class="scard reveal" style="transition-delay:.24s"><div class="ic">🗺️</div><h3>ทริปหลายวัน</h3><p>ทัวร์ภาคใต้ สัมมนาบริษัท ดูงาน จัดรถให้ครบทุกวัน</p><div class="note"><span>มัดจำ 50%</span><span>วางบิลได้ (บริษัท)</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">ง่ายแค่ 4 ขั้น</span>
+      <h2>ส่งฟอร์มแล้วรอรับราคา ที่เหลือเราจัดการ</h2>
+    </div>
+    <div class="steps-line reveal"></div>
+    <div class="steps">
+      <div class="step reveal"><div class="n">1</div><h3>บอกความต้องการ</h3><p>รถ วันเดินทาง จุดรับ-ส่ง จำนวนคน ใช้เวลาไม่ถึง 2 นาที</p></div>
+      <div class="step reveal" style="transition-delay:.1s"><div class="n">2</div><h3>เราหารถ + เสนอราคา</h3><p>เช็กรถว่างจากพาร์ทเนอร์ทั้งเครือข่าย ส่งราคาให้ทาง LINE ใน 30 นาที</p></div>
+      <div class="step reveal" style="transition-delay:.2s"><div class="n">3</div><h3>ยืนยัน + ชำระเงิน</h3><p>งานเล็กจ่ายเต็ม งานใหญ่มัดจำ 50% ได้ใบเสร็จทุกงาน</p></div>
+      <div class="step reveal" style="transition-delay:.3s"><div class="n">4</div><h3>รับข้อมูลคนขับ</h3><p>ชื่อ เบอร์ ทะเบียนรถ ส่งให้ก่อนวันเดินทาง ตามได้ตลอด</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="routes" id="routes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">เส้นทางยอดนิยม</span>
+      <h2>ไปที่ไหนก็ได้ นี่คือที่คนเลือกบ่อย</h2>
+      <p>เวลาโดยประมาณ ราคาแจ้งหลังรับข้อมูล</p>
+    </div>
+    <div class="rgrid">
+      <div class="rcard reveal"><div class="pts"><span>🛬 สนามบินภูเก็ต</span><span>ป่าตอง</span></div><svg viewBox="0 0 300 40"><path class="path" d="M8 20 C 80 -10, 200 50, 290 20"/><circle class="car" r="6" fill="#FFC93C"/></svg><div class="info"><span>≈ 45 นาที · 40 กม.</span><b>เก๋ง / VIP8</b></div></div>
+      <div class="rcard reveal" style="transition-delay:.1s"><div class="pts"><span>ภูเก็ต</span><span>กระบี่ 🏝️</span></div><svg viewBox="0 0 300 40"><path class="path" d="M8 20 C 80 -10, 200 50, 290 20"/><circle class="car" r="6" fill="#FF6B6B" style="animation-delay:-1.2s"/></svg><div class="info"><span>≈ 2.5 ชม. · 165 กม.</span><b>VIP8 / VIP10</b></div></div>
+      <div class="rcard reveal" style="transition-delay:.2s"><div class="pts"><span>ภูเก็ต</span><span>เขาหลัก 🌴</span></div><svg viewBox="0 0 300 40"><path class="path" d="M8 20 C 80 -10, 200 50, 290 20"/><circle class="car" r="6" fill="#14B8A6" style="animation-delay:-2.4s"/></svg><div class="info"><span>≈ 1.5 ชม. · 100 กม.</span><b>SUV / VIP8</b></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="policy">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat reveal"><div class="num" data-count="1280">0</div><p>เที่ยวที่ส่งลูกค้าถึงที่หมาย <small>(ตัวอย่าง)</small></p></div>
+      <div class="stat reveal" style="transition-delay:.1s"><div class="num c" data-count="46">0</div><p>รถพาร์ทเนอร์ในเครือข่าย</p></div>
+      <div class="stat reveal" style="transition-delay:.2s"><div class="num s" data-count="12" data-suffix=" นาที">0</div><p>เวลาตอบกลับเฉลี่ย</p></div>
+    </div>
+    <div class="policy">
+      <div class="pcard reveal"><h3><i>💳</i> การชำระเงิน</h3><ul>
+        <li>สนามบิน / ในจังหวัด — ชำระเต็มหลังตกลงราคา (ไม่ต้องจ่ายหน้างาน)</li>
+        <li>ข้ามจังหวัด / เหมารายวัน / หลายวัน — มัดจำ 50% ส่วนที่เหลือก่อนวันเดินทาง</li>
+        <li>ลูกค้าบริษัท — วางบิลได้ ตามตกลง</li>
+        <li>เราหารถให้ไม่ได้ — คืนเงินเต็ม 100% ภายใน 24 ชม.</li>
+      </ul></div>
+      <div class="pcard reveal" style="transition-delay:.1s"><h3><i>🗓️</i> การยกเลิก</h3><ul>
+        <li>งานเล็ก: ยกเลิกก่อน 24 ชม. คืนเต็ม</li>
+        <li>งานใหญ่: ก่อน 3 วัน คืนเต็ม · 1–3 วัน คืนครึ่ง</li>
+        <li class="x">น้อยกว่า 24 ชม. หรือไม่มา — ไม่คืนเงิน</li>
+        <li class="x">ช่วงเทศกาล (ปีใหม่ สงกรานต์ ธ.ค.–ก.พ.) — ไม่คืนทุกกรณี</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="kicker">FAQ</span><h2>คำถามที่พบบ่อย</h2></div>
+    <div class="faq reveal">
+      <details><summary>ราคารวมน้ำมันกับทางด่วนไหม?</summary><p>รับส่งสนามบินและจุดต่อจุด — รวมน้ำมันแล้ว ค่าทางด่วน/ค่าเข้าสถานที่จ่ายตามจริง · เหมารายวัน — ไม่รวมน้ำมัน จ่ายตามจริงหรือคุยราคาเหมาได้</p></details>
+      <details><summary>เหมารายวันเกิน 8 ชั่วโมงคิดยังไง?</summary><p>คิด OT ชั่วโมงละ 300 บาท นับจากชั่วโมงที่ 9 เป็นต้นไป แจ้งคนขับล่วงหน้าได้เลย</p></details>
+      <details><summary>รู้ได้ยังไงว่ารถจะมาแน่?</summary><p>หลังยืนยันเราส่งชื่อคนขับ เบอร์โทร และทะเบียนรถให้ก่อนวันเดินทาง และคนขับจะทักหาคุณล่วงหน้า ถ้ามีปัญหาเราหารถสำรองให้ทันที</p></details>
+      <details><summary>มีคาร์ซีทเด็กไหม?</summary><p>แจ้งในช่องหมายเหตุตอนขอราคา เราจัดหาให้ได้ในบางคัน (อาจมีค่าใช้จ่ายเพิ่ม)</p></details>
+    </div>
+  </div>
+</section>
+
+<div class="final">
+  <div class="wrap">
+    <div class="box reveal">
+      <h2>พร้อมออกเดินทางหรือยัง?</h2>
+      <p>ขอราคาฟรี ไม่ผูกมัด ตอบกลับภายใน 30 นาที (08:00–22:00 ทุกวัน)</p>
+      <div class="cta"><a class="btn btn-primary" href="request.html">ขอราคาเลย →</a><a class="btn btn-line" href="#">💬 ทักไลน์</a></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div><b class="kanit" style="color:var(--ink)">Phuket Transfer Hub</b><br>บริษัท ______ จำกัด · ภูเก็ต<br>LINE: @______ · โทร 08x-xxx-xxxx</div>
+    <div>เวลาทำการ 08:00–22:00 ทุกวัน<br><a href="#policy">เงื่อนไขการชำระเงินและยกเลิก</a></div>
+    <div>© 2026 Phuket Transfer Hub</div>
+  </div>
+</footer>
+
+<div class="sticky">
+  <a class="btn btn-line" href="#">💬 LINE</a>
+  <a class="btn btn-primary" href="request.html">ขอราคา →</a>
+</div>
+
+<script>
+// scroll reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// seat dots
+document.querySelectorAll('.vcard').forEach(c=>{
+  const n=+c.dataset.seats,box=c.querySelector('.seats');
+  for(let i=0;i<n;i++){const s=document.createElement('span');s.style.transitionDelay=(i*60)+'ms';box.appendChild(s)}
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');
+    c.style.transform=`perspective(900px) rotateY(${(x-.5)*8}deg) rotateX(${(.5-y)*8}deg) translateY(-6px)`});
+  c.addEventListener('mouseleave',()=>c.style.transform='');
+});
+
+// hero parallax
+const van=document.getElementById('van');
+window.addEventListener('mousemove',e=>{const x=(e.clientX/innerWidth-.5),y=(e.clientY/innerHeight-.5);van.style.transform=`translate(${x*18}px,${y*12}px) rotate(${x*2}deg)`});
+
+// counters
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,end=+el.dataset.count,suf=el.dataset.suffix||'';let t0=null;
+  const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/1400,1);const v=Math.round(end*(1-Math.pow(1-p,3)));el.textContent=v.toLocaleString('th-TH')+suf;if(p<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);cio.unobserve(el)}),{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+// quick bar → request form (prefilled)
+document.getElementById('quickGo').addEventListener('click',e=>{e.preventDefault();const p=new URLSearchParams();p.set('type',document.getElementById('qType').value);
+  const to=document.getElementById('qTo').value.trim();if(to)p.set('to',to);const d=document.getElementById('qDate').value;if(d)p.set('date',d);p.set('pax',document.getElementById('qPax').value||4);
+  location.href='request.html?'+p.toString()});
+</script>
+</body>
+</html>

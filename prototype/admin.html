@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>หลังบ้าน — Phuket Transfer Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#14B8A6;--teal-deep:#0F9488;--teal-wash:#E6FAF7;--coral:#FF6B6B;--coral-deep:#E84E4E;--coral-wash:#FFECEC;--sun:#FFC93C;--sun-wash:#FFF6DA;--cream:#FFFBF5;--ink:#1A2B3C;--ink-soft:#5B6B7A;--ink-faint:#9AA8B4;--line:#EEE6DA;--purple:#8B5CF6;--purple-wash:#F1EBFF;--blue:#3B82F6;--blue-wash:#EAF2FF;--green:#22C55E;--green-wash:#E9F9EF;--shadow:0 10px 30px -12px rgba(26,43,60,.18);--shadow-lg:0 30px 60px -20px rgba(26,43,60,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;color:var(--ink);background:#F6F1E9;line-height:1.5;font-size:14.5px;overflow-x:hidden}
+h1,h2,h3,h4,.kanit{font-family:'Kanit',sans-serif;line-height:1.2}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+/* sidebar */
+.side{background:#fff;border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Kanit';font-weight:600;font-size:16px;padding:6px 8px 18px}
+.logo .mark{width:36px;height:36px;border-radius:11px;background:var(--teal);display:grid;place-items:center;color:#fff;font-size:12px;transform:rotate(-6deg)}
+.logo small{display:block;font-size:11px;font-weight:400;color:var(--ink-soft);line-height:1}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;font-family:'Kanit';font-weight:500;color:var(--ink-soft);transition:all .2s;border:0;background:transparent;width:100%;text-align:left}
+.nav:hover{background:var(--cream);color:var(--ink)}
+.nav.on{background:var(--teal-wash);color:var(--teal-deep)}
+.nav .cnt{margin-left:auto;background:var(--coral);color:#fff;font-size:12px;padding:1px 8px;border-radius:999px;font-family:'Sarabun';font-weight:600}
+.nav.dis{opacity:.45;cursor:not-allowed}
+.nav.dis .cnt{background:var(--line);color:var(--ink-soft);font-weight:500}
+.side .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--line);font-size:13px}
+.side .me .av{width:34px;height:34px;border-radius:50%;background:var(--sun);display:grid;place-items:center;font-family:'Kanit';font-weight:600}
+.side .me .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px}
+/* main */
+.main{padding:20px 24px 90px;min-width:0}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.top h1{font-size:24px;font-weight:600}
+.top .sub{color:var(--ink-soft);font-size:13.5px}
+.search{margin-left:auto;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;min-width:260px}
+.search input{border:0;outline:0;font:inherit;width:100%;background:transparent}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;border:0;font-family:'Kanit';font-weight:500;font-size:14px;transition:all .2s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--coral);color:#fff;box-shadow:0 8px 20px -8px rgba(255,107,107,.7)}
+.btn-primary:hover{background:var(--coral-deep)}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal-deep)}
+.btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink)}.btn-ghost:hover{border-color:var(--teal);color:var(--teal-deep)}
+.btn-soft{background:var(--teal-wash);color:var(--teal-deep)}.btn-soft:hover{background:#d3f4ee}
+.btn-danger{background:var(--coral-wash);color:var(--coral-deep)}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.btn.icon{padding:9px;border-radius:10px}
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.kpi .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px}
+.kpi b{font-family:'Kanit';font-size:24px;font-weight:600;line-height:1;display:block}
+.kpi span{font-size:12.5px;color:var(--ink-soft)}
+/* board */
+.board{display:grid;grid-template-columns:repeat(6,minmax(232px,1fr));gap:12px;overflow-x:auto;padding-bottom:10px;align-items:start}
+.col{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:16px;padding:10px;min-height:300px;transition:background .2s,border-color .2s}
+.col.over{background:var(--teal-wash);border-color:var(--teal);border-style:dashed}
+.col h3{font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;padding:4px 6px 10px}
+.col h3 .d{width:9px;height:9px;border-radius:50%}
+.col h3 .n{margin-left:auto;background:#fff;border:1px solid var(--line);font-size:12px;padding:1px 8px;border-radius:999px;font-family:'Sarabun';color:var(--ink-soft)}
+.cards{display:flex;flex-direction:column;gap:8px;min-height:60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;cursor:grab;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;animation:in .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#d7ebe6}
+.card.dragging{opacity:.4;transform:rotate(2deg)}
+.card.new{border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,107,107,.15)}
+.card.new::before{content:"";position:absolute;top:10px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--coral);animation:ping 1.4s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(255,107,107,.6)}70%{box-shadow:0 0 0 8px rgba(255,107,107,0)}100%{box-shadow:0 0 0 0 rgba(255,107,107,0)}}
+.card .code{font-family:'Kanit';font-weight:500;font-size:13px;color:var(--ink-soft)}
+.card .wait{font-size:11.5px;color:var(--ink-faint);float:right;margin-right:14px}
+.card .wait.late{color:var(--coral-deep);font-weight:600}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0}
+.chip{font-size:11.5px;padding:2px 8px;border-radius:7px;background:var(--cream);border:1px solid var(--line);font-weight:500;white-space:nowrap}
+.chip.v{background:var(--teal-wash);border-color:transparent;color:var(--teal-deep)}
+.chip.s{background:var(--sun-wash);border-color:transparent;color:#8A6200}
+.chip.p{background:var(--purple-wash);border-color:transparent;color:var(--purple)}
+.card .when{font-family:'Kanit';font-weight:500;font-size:14.5px}
+.card .route{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12.5px;padding-top:8px;border-top:1px dashed var(--line)}
+.card .foot .price{font-family:'Kanit';font-weight:500;color:var(--teal-deep)}
+.card .foot .m{font-size:11px;color:var(--ink-faint)}
+/* list view */
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+th{text-align:left;font-family:'Kanit';font-weight:500;font-size:13px;color:var(--ink-soft);padding:12px 14px;background:var(--cream);border-bottom:1px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+tr:hover td{background:#FFFDF9}
+tr{cursor:pointer}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:999px;font-weight:600}
+.pill i{width:7px;height:7px;border-radius:50%;display:inline-block}
+/* partners */
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:1100px){.pgrid{grid-template-columns:1fr}}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.pcard .ph{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pcard .av{width:42px;height:42px;border-radius:12px;background:var(--sun-wash);display:grid;place-items:center;font-family:'Kanit';font-weight:600;color:#8A6200}
+.pcard .ph b{font-family:'Kanit';font-weight:500;font-size:16px;display:block}
+.pcard .ph small{color:var(--ink-soft);font-size:12.5px}
+.pcard .ph .act{margin-left:auto;display:flex;gap:6px}
+.stars{color:var(--sun);letter-spacing:1px;font-size:13px}
+.veh{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;margin-top:8px;transition:all .2s}
+.veh:hover{border-color:var(--teal);background:var(--cream)}
+.veh.off{opacity:.5}
+.veh .plate{font-family:'Kanit';font-weight:500;background:var(--ink);color:#fff;padding:3px 9px;border-radius:7px;font-size:13px;letter-spacing:.5px}
+.veh .info{flex:1;min-width:0}
+.veh .info b{font-weight:600;font-size:13.5px}
+.veh .info small{display:block;color:var(--ink-soft);font-size:12px}
+.veh .cost{text-align:right;font-size:12px;color:var(--ink-soft)}
+.veh .cost b{display:block;font-family:'Kanit';font-weight:500;color:var(--ink);font-size:14px}
+.sw{width:38px;height:22px;border-radius:11px;background:var(--line);position:relative;border:0;flex-shrink:0;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw.on{background:var(--teal)}.sw.on::after{left:19px}
+/* drawer */
+.overlay{position:fixed;inset:0;background:rgba(26,43,60,.35);opacity:0;pointer-events:none;transition:opacity .25s;z-index:80;backdrop-filter:blur(2px)}
+.overlay.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:#fff;z-index:90;transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.drawer.show{transform:none}
+.dh{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;position:sticky;top:0;background:#fff}
+.dh h2{font-size:20px;font-weight:600}
+.dh .x{margin-left:auto;width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-size:18px}
+.db{padding:18px 22px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:16px}
+.sec{border:1px solid var(--line);border-radius:14px;padding:14px}
+.sec h4{font-size:14px;font-weight:500;color:var(--ink-soft);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec h4 .r{margin-left:auto;font-size:12px;font-weight:400}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:13.5px}
+.kv .k{color:var(--ink-faint);font-size:12px;display:block}
+.kv .v{font-weight:500}
+.kv .full{grid-column:1/-1}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.f{display:flex;flex-direction:column;gap:5px}
+.f label{font-size:12.5px;color:var(--ink-soft);font-family:'Kanit';font-weight:500}
+.in{display:flex;align-items:center;gap:6px;background:var(--cream);border:1.5px solid var(--line);border-radius:10px;padding:8px 11px;font-size:14px}
+.in:focus-within{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(20,184,166,.15)}
+.in input,.in select,.in textarea{border:0;outline:0;background:transparent;font:inherit;width:100%}
+.in .u{color:var(--ink-faint);font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.margin{margin-top:10px;background:var(--teal-wash);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-size:13.5px}
+.margin b{font-family:'Kanit';font-size:18px;font-weight:600;color:var(--teal-deep)}
+.margin.bad{background:var(--coral-wash)}.margin.bad b{color:var(--coral-deep)}
+.tl{list-style:none;display:flex;flex-direction:column;gap:0}
+.tl li{display:flex;gap:10px;font-size:13px;padding:6px 0;position:relative}
+.tl li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);margin-top:6px;flex-shrink:0}
+.tl li small{color:var(--ink-faint);display:block;font-size:11.5px}
+.vopt{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;margin-top:6px;transition:all .2s;font-size:13px}
+.vopt:hover{border-color:#cfe9e4}.vopt.on{border-color:var(--teal);background:var(--teal-wash)}
+.vopt .plate{font-family:'Kanit';font-weight:500;background:var(--ink);color:#fff;padding:2px 8px;border-radius:6px;font-size:12px}
+.vopt small{color:var(--ink-soft);margin-left:auto;white-space:nowrap}
+.df{padding:14px 22px;border-top:1px solid var(--line);display:flex;gap:8px;background:#fff}
+/* toast */
+.toasts{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;z-index:100}
+.toast{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;font-size:13.5px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:in .3s;max-width:360px}
+.toast.line{background:#06C755}
+.toast .t{font-family:'Kanit';font-weight:500}
+/* modal */
+.modal{position:fixed;inset:0;display:grid;place-items:center;z-index:95;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal.show{opacity:1;pointer-events:auto}
+.modal .box{background:#fff;border-radius:18px;padding:22px;width:min(520px,92vw);box-shadow:var(--shadow-lg);transform:translateY(12px);transition:transform .25s}
+.modal.show .box{transform:none}
+.modal h3{font-size:18px;font-weight:600;margin-bottom:14px}
+.page{display:none}.page.on{display:block;animation:in .3s}
+.empty{text-align:center;color:var(--ink-faint);font-size:12.5px;padding:18px 6px;border:1.5px dashed var(--line);border-radius:12px}
+/* mobile */
+.mnav{display:none}
+@media(max-width:900px){.app{grid-template-columns:1fr}.side{display:none}.mnav{display:flex;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:70;padding:6px}.mnav button{flex:1;border:0;background:transparent;font-family:'Kanit';font-size:12px;color:var(--ink-soft);padding:8px 4px;border-radius:10px}.mnav button.on{color:var(--teal-deep);background:var(--teal-wash)}.main{padding:14px 14px 90px}.search{min-width:0;width:100%}.board{grid-template-columns:repeat(6,82vw)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="logo"><span class="mark">PTH</span><span>Transfer Hub<small>หลังบ้าน</small></span></div>
+    <button class="nav on" data-page="board">📋 กระดาน <span class="cnt" id="cntNew">0</span></button>
+    <button class="nav" data-page="list">🗂️ รายการทั้งหมด</button>
+    <button class="nav" data-page="partners">🚐 พาร์ทเนอร์ & รถ</button>
+    <button class="nav dis" title="เฟส 2">📅 ปฏิทินรถ <span class="cnt">เฟส 2</span></button>
+    <button class="nav dis" title="เฟส 2">📈 รายงาน <span class="cnt">เฟส 2</span></button>
+    <div class="me"><div class="av">P</div><div><b>คุณปานุวัฒน์</b><br><span class="dot"></span><span style="color:var(--ink-soft)">รับ LINE แจ้งเตือนอยู่</span></div></div>
+  </aside>
+
+  <main class="main">
+    <!-- BOARD -->
+    <div class="page on" id="page-board">
+      <div class="top"><div><h1>กระดาน request</h1><div class="sub">ลากการ์ดเพื่อเปลี่ยนสถานะ · คลิกเพื่อดูรายละเอียด</div></div>
+        <div class="search">🔍 <input id="q" placeholder="ค้นหา เลข / ชื่อ / เบอร์ / เส้นทาง"></div>
+        <button class="btn btn-primary" id="simulate">⚡ จำลอง request ใหม่</button></div>
+      <div class="kpis">
+        <div class="kpi"><div class="ic" style="background:var(--coral-wash)">🔔</div><div><b id="k1">0</b><span>รอตอบ (ใหม่)</span></div></div>
+        <div class="kpi"><div class="ic" style="background:var(--sun-wash)">⏱️</div><div><b id="k2">0</b><span>ตอบช้าเกิน 30 นาที</span></div></div>
+        <div class="kpi"><div class="ic" style="background:var(--teal-wash)">🚐</div><div><b id="k3">0</b><span>งานที่ยืนยันแล้ว 7 วันนี้</span></div></div>
+        <div class="kpi"><div class="ic" style="background:var(--purple-wash)">💰</div><div><b id="k4">฿0</b><span>กำไรเดือนนี้ (งานยืนยัน+จบ)</span></div></div>
+      </div>
+      <div class="board" id="board"></div>
+    </div>
+
+    <!-- LIST -->
+    <div class="page" id="page-list">
+      <div class="top"><div><h1>รายการทั้งหมด</h1><div class="sub">เรียงตามวันเดินทาง</div></div><div class="search">🔍 <input id="q2" placeholder="ค้นหา"></div></div>
+      <table><thead><tr><th>เลข</th><th>สถานะ</th><th>วันเดินทาง</th><th>รถ / บริการ</th><th>เส้นทาง</th><th>ลูกค้า</th><th style="text-align:right">ราคาขาย</th></tr></thead><tbody id="tbody"></tbody></table>
+    </div>
+
+    <!-- PARTNERS -->
+    <div class="page" id="page-partners">
+      <div class="top"><div><h1>พาร์ทเนอร์ & รถ</h1><div class="sub">เจ้าของรถ/คนขับในเครือข่าย พร้อมราคาทุนอ้างอิง</div></div>
+        <div class="search">🔍 <input id="q3" placeholder="ทะเบียน / ชื่อ / ประเภท"></div>
+        <button class="btn btn-ghost" id="addPartner">+ พาร์ทเนอร์</button><button class="btn btn-teal" id="addVehicle">+ เพิ่มรถ</button></div>
+      <div class="chips" id="typeFilter" style="margin-bottom:12px"></div>
+      <div class="pgrid" id="pgrid"></div>
+    </div>
+  </main>
+</div>
+
+<nav class="mnav"><button class="on" data-page="board">📋 กระดาน</button><button data-page="list">🗂️ รายการ</button><button data-page="partners">🚐 รถ</button></nav>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer"></aside>
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+const V={VIP8:{n:'VIP 8',full:'รถตู้ VIP 8 ที่นั่ง',s:8},VIP10:{n:'VIP 10',full:'รถตู้ VIP 10 ที่นั่ง',s:10},SUV:{n:'SUV',full:'SUV 5 ที่นั่ง',s:5},SEDAN:{n:'เก๋ง',full:'รถเก๋ง 4 ที่นั่ง',s:4}};
+const SV={AIRPORT:'สนามบิน',P2P:'จุดต่อจุด',DAILY:'เหมารายวัน',MULTI:'หลายวัน'};
+const ST={NEW:{n:'ใหม่',c:'#FF6B6B',w:'#FFECEC'},SOURCING:{n:'กำลังหารถ',c:'#EF9F27',w:'#FFF6DA'},QUOTED:{n:'เสนอราคาแล้ว',c:'#8B5CF6',w:'#F1EBFF'},CONFIRMED:{n:'ยืนยันแล้ว',c:'#14B8A6',w:'#E6FAF7'},DONE:{n:'จบงาน',c:'#22C55E',w:'#E9F9EF'},CANCELLED:{n:'ยกเลิก',c:'#9AA8B4',w:'#F1EFE8'}};
+const ORDER=['NEW','SOURCING','QUOTED','CONFIRMED','DONE','CANCELLED'];
+const PAY={FULL:'ชำระเต็ม 100%',DEP50:'มัดจำ 50%',CREDIT:'วางบิล (บริษัท)'};
+const now=Date.now(),m=60000,h=3600000,d=86400000;
+const partners=[
+  {id:1,name:'พี่หนุ่ม (ถลาง)',phone:'081-111-2222',line:'noom_van',rating:5,note:'ตรงเวลา รถใหม่ รับงานสนามบินดึกได้',vehicles:[
+    {id:11,plate:'ฮข 1234 ภูเก็ต',type:'VIP10',model:'Toyota Commuter 2023',costAirport:900,costDaily:2200,active:true},
+    {id:12,plate:'ฮค 5678 ภูเก็ต',type:'VIP8',model:'Hyundai H1 2022',costAirport:1000,costDaily:2500,active:true}]},
+  {id:2,name:'เจ๊แดง ป่าตอง',phone:'089-333-4444',line:'daeng.van',rating:4,note:'มีหลายคัน เหมาะกรุ๊ปใหญ่',vehicles:[
+    {id:21,plate:'ฮง 2468 ภูเก็ต',type:'VIP10',model:'Toyota Commuter 2021',costAirport:850,costDaily:2000,active:true},
+    {id:22,plate:'ฮง 1357 ภูเก็ต',type:'VIP10',model:'Toyota Commuter 2020',costAirport:800,costDaily:1900,active:false}]},
+  {id:3,name:'บังยา กะรน',phone:'086-555-6666',line:'',rating:4,note:'SUV สภาพดี ขับนุ่ม',vehicles:[
+    {id:31,plate:'กข 9012 ภูเก็ต',type:'SUV',model:'Toyota Fortuner 2022',costAirport:900,costDaily:2400,active:true}]},
+  {id:4,name:'น้องเอ็ม สนามบิน',phone:'092-777-8888',line:'m.driver',rating:5,note:'เก๋งรับสนามบินเป็นหลัก รับงานเช้ามาก',vehicles:[
+    {id:41,plate:'ขค 3344 ภูเก็ต',type:'SEDAN',model:'Toyota Camry 2021',costAirport:600,costDaily:1800,active:true},
+    {id:42,plate:'ขง 7788 ภูเก็ต',type:'SEDAN',model:'Honda Accord 2020',costAirport:550,costDaily:1700,active:true}]},
+  {id:5,name:'ลุงชัย กระบี่',phone:'084-999-0000',line:'',rating:3,note:'อยู่กระบี่ เหมาะงานขากลับจากกระบี่',vehicles:[
+    {id:51,plate:'ฮจ 1122 กระบี่',type:'VIP8',model:'Toyota Commuter 2019',costAirport:1100,costDaily:2300,active:true}]}
+];
+const allVehicles=()=>partners.flatMap(p=>p.vehicles.map(v=>({...v,partner:p})));
+let seq=41;
+let requests=[
+  {id:1,code:'PTH-2026-0041',status:'NEW',created:now-8*m,v:'VIP8',count:1,sv:'AIRPORT',date:'2026-10-25',time:'09:00',route:'สนามบินภูเก็ต → Holiday Inn ป่าตอง',pax:6,lug:4,name:'สมชาย ใจดี',phone:'081-234-5678',chan:'LINE',lineLinked:true,flight:'TG203',note:'มีเด็ก 1 คน ขอคาร์ซีท',pay:'FULL',log:[['NEW','ลูกค้าส่งฟอร์ม']]},
+  {id:2,code:'PTH-2026-0040',status:'NEW',created:now-47*m,v:'SEDAN',count:1,sv:'AIRPORT',date:'2026-10-22',time:'05:30',route:'Novotel กมลา → สนามบินภูเก็ต',pax:2,lug:2,name:'Wanida P.',phone:'095-888-1122',chan:'PHONE',lineLinked:false,flight:'FD3009',note:'',pay:'FULL',log:[['NEW','ลูกค้าส่งฟอร์ม']]},
+  {id:3,code:'PTH-2026-0039',status:'SOURCING',created:now-2*h,v:'VIP10',count:2,sv:'MULTI',date:'2026-11-02',time:'08:00',route:'รับที่ ภูเก็ต · 3 วัน (กระบี่–ตรัง)',pax:18,lug:14,name:'บ.สยามเทค (คุณนก)',phone:'02-123-4567',chan:'LINE',lineLinked:true,company:'บริษัท สยามเทค จำกัด',note:'สัมมนาบริษัท ขอใบเสนอราคาเป็นทางการ',pay:'CREDIT',log:[['NEW','ลูกค้าส่งฟอร์ม'],['SOURCING','โทรถามเจ๊แดง + พี่หนุ่ม']]},
+  {id:4,code:'PTH-2026-0038',status:'SOURCING',created:now-5*h,v:'SUV',count:1,sv:'DAILY',date:'2026-10-28',time:'09:00',route:'รับที่ Cape Panwa · เที่ยว 8 ชม.',pax:4,lug:0,name:'คุณแพร',phone:'088-444-5566',chan:'LINE',lineLinked:true,plan:'วัดฉลอง → แหลมพรหมเทพ → ป่าตอง',note:'',pay:'DEP50',log:[['NEW','ลูกค้าส่งฟอร์ม'],['SOURCING','บังยาว่าง รอคอนเฟิร์มเวลา']]},
+  {id:5,code:'PTH-2026-0037',status:'QUOTED',created:now-d,v:'VIP8',count:1,sv:'P2P',date:'2026-10-30',time:'10:00',route:'ป่าตอง → อ่าวนาง (กระบี่)',pax:7,lug:6,name:'คุณต้น',phone:'086-222-3344',chan:'LINE',lineLinked:true,note:'',pay:'DEP50',vehicleId:12,cost:2800,price:3500,log:[['NEW','ลูกค้าส่งฟอร์ม'],['SOURCING','พี่หนุ่มรับ'],['QUOTED','ส่งราคา 3,500 ทาง LINE']]},
+  {id:6,code:'PTH-2026-0036',status:'CONFIRMED',created:now-2*d,v:'VIP10',count:1,sv:'AIRPORT',date:'2026-10-21',time:'14:00',route:'สนามบินภูเก็ต → JW Marriott ไม้ขาว',pax:9,lug:9,name:'คุณโอ๊ต (ครอบครัว)',phone:'081-999-8877',chan:'LINE',lineLinked:true,note:'',pay:'FULL',vehicleId:11,cost:900,price:1400,paid:1400,log:[['NEW','ลูกค้าส่งฟอร์ม'],['SOURCING','พี่หนุ่ม'],['QUOTED','1,400'],['CONFIRMED','โอนแล้ว 1,400 ส่งข้อมูลคนขับแล้ว']]},
+  {id:7,code:'PTH-2026-0035',status:'CONFIRMED',created:now-3*d,v:'SEDAN',count:1,sv:'AIRPORT',date:'2026-10-20',time:'07:00',route:'Amari ป่าตอง → สนามบินภูเก็ต',pax:2,lug:2,name:'คุณเบียร์',phone:'090-111-2233',chan:'LINE',lineLinked:true,note:'',pay:'FULL',vehicleId:41,cost:600,price:900,paid:900,log:[['NEW','ฟอร์ม'],['QUOTED','900'],['CONFIRMED','โอนแล้ว']]},
+  {id:8,code:'PTH-2026-0034',status:'DONE',created:now-6*d,v:'VIP8',count:1,sv:'DAILY',date:'2026-10-15',time:'08:00',route:'รับที่ กะตะ · เที่ยว 8 ชม. (+OT 1 ชม.)',pax:6,lug:0,name:'คุณจอย',phone:'089-000-1111',chan:'LINE',lineLinked:true,note:'',pay:'DEP50',vehicleId:51,cost:2300,price:3200,paid:3500,ot:1,log:[['NEW','ฟอร์ม'],['QUOTED','3,200'],['CONFIRMED','มัดจำ 1,600'],['DONE','จบงาน OT 1 ชม. +300 เก็บครบ']]},
+  {id:9,code:'PTH-2026-0033',status:'CANCELLED',created:now-7*d,v:'VIP10',count:1,sv:'P2P',date:'2026-10-18',time:'09:00',route:'ภูเก็ต → หาดใหญ่',pax:10,lug:10,name:'คุณกิ๊ก',phone:'083-555-7777',chan:'PHONE',lineLinked:false,note:'',pay:'DEP50',cancelReason:'ราคาไม่โดน ไปเจ้าอื่น',log:[['NEW','ฟอร์ม'],['QUOTED','5,500'],['CANCELLED','ราคาไม่โดน ไปเจ้าอื่น']]},
+];
+const $=id=>document.getElementById(id);
+const thDate=s=>new Date(s+'T00:00').toLocaleDateString('th-TH',{day:'numeric',month:'short'});
+const baht=n=>'฿'+(n||0).toLocaleString('th-TH');
+const ago=t=>{const x=now-t;if(x<h)return Math.round(x/m)+' นาที';if(x<d)return Math.round(x/h)+' ชม.';return Math.round(x/d)+' วัน'};
+const toast=(msg,cls='')=>{const t=document.createElement('div');t.className='toast '+cls;t.innerHTML=msg;$('toasts').appendChild(t);setTimeout(()=>{t.style.opacity=0;t.style.transition='opacity .4s';setTimeout(()=>t.remove(),400)},3800)};
+
+// nav
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{if(b.classList.contains('dis'))return;const p=b.dataset.page;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('on',x.dataset.page===p));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('on',x.id==='page-'+p));renderAll()});
+
+// ---- board ----
+function cardHTML(r){const late=r.status==='NEW'&&now-r.created>30*m;
+  return `<div class="card ${r.status==='NEW'?'new':''}" draggable="true" data-id="${r.id}">
+    <span class="wait ${late?'late':''}">${r.status==='NEW'?'รอ '+ago(r.created):ago(r.created)+'ที่แล้ว'}</span><span class="code">${r.code}</span>
+    <div class="chips"><span class="chip v">${V[r.v].n}${r.count>1?' ×'+r.count:''}</span><span class="chip s">${SV[r.sv]}</span>${r.company?'<span class="chip p">บริษัท</span>':''}${r.lineLinked?'<span class="chip" style="color:#06A047">💬 LINE</span>':''}</div>
+    <div class="when">${thDate(r.date)} · ${r.time}</div><div class="route">${r.route}</div>
+    <div class="foot"><span>👤 ${r.name}</span>${r.price?`<span class="price">${baht(r.price)}<span class="m"> กำไร ${baht(r.price-(r.cost||0))}</span></span>`:'<span class="m">ยังไม่มีราคา</span>'}</div></div>`}
+function renderBoard(){const q=($('q').value||'').toLowerCase();const b=$('board');b.innerHTML=ORDER.map(s=>{const list=requests.filter(r=>r.status===s&&(!q||(r.code+r.name+r.phone+r.route).toLowerCase().includes(q)));
+  return `<div class="col" data-status="${s}"><h3><span class="d" style="background:${ST[s].c}"></span>${ST[s].n}<span class="n">${list.length}</span></h3><div class="cards">${list.length?list.map(cardHTML).join(''):'<div class="empty">ว่าง</div>'}</div></div>`}).join('');
+  b.querySelectorAll('.card').forEach(c=>{c.onclick=()=>openDrawer(+c.dataset.id);c.ondragstart=e=>{e.dataTransfer.setData('id',c.dataset.id);c.classList.add('dragging')};c.ondragend=()=>c.classList.remove('dragging')});
+  b.querySelectorAll('.col').forEach(col=>{col.ondragover=e=>{e.preventDefault();col.classList.add('over')};col.ondragleave=()=>col.classList.remove('over');col.ondrop=e=>{e.preventDefault();col.classList.remove('over');setStatus(+e.dataTransfer.getData('id'),col.dataset.status,'ลากบนกระดาน')}});
+  const nw=requests.filter(r=>r.status==='NEW');$('cntNew').textContent=nw.length;$('k1').textContent=nw.length;$('k2').textContent=nw.filter(r=>now-r.created>30*m).length;
+  $('k3').textContent=requests.filter(r=>r.status==='CONFIRMED').length;$('k4').textContent=baht(requests.filter(r=>['CONFIRMED','DONE'].includes(r.status)).reduce((a,r)=>a+((r.price||0)-(r.cost||0)+(r.ot||0)*300),0))}
+function setStatus(id,s,note){const r=requests.find(x=>x.id===id);if(!r||r.status===s)return;if(s==='CANCELLED'&&!r.cancelReason){r.cancelReason=prompt('เหตุผลที่ยกเลิก (จะเก็บไว้ดูว่าเสียลูกค้าเพราะอะไร)','ราคาไม่โดน')||'ไม่ระบุ';note=r.cancelReason}
+  r.status=s;r.log.push([s,note||'']);renderAll();toast(`<span class="t">${r.code}</span> → ${ST[s].n}`);if($('drawer').classList.contains('show'))openDrawer(id)}
+
+// ---- list ----
+function renderList(){const q=($('q2').value||'').toLowerCase();$('tbody').innerHTML=[...requests].filter(r=>!q||(r.code+r.name+r.phone+r.route).toLowerCase().includes(q)).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>`<tr data-id="${r.id}"><td class="kanit" style="font-weight:500">${r.code}</td><td><span class="pill" style="background:${ST[r.status].w};color:${ST[r.status].c}"><i style="background:${ST[r.status].c}"></i>${ST[r.status].n}</span></td><td>${thDate(r.date)} ${r.time}</td><td>${V[r.v].n}${r.count>1?' ×'+r.count:''} · ${SV[r.sv]}</td><td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.route}</td><td>${r.name}<br><small style="color:var(--ink-faint)">${r.phone}</small></td><td style="text-align:right;font-family:Kanit;font-weight:500">${r.price?baht(r.price):'—'}</td></tr>`).join('');
+  document.querySelectorAll('#tbody tr').forEach(tr=>tr.onclick=()=>openDrawer(+tr.dataset.id))}
+
+// ---- partners ----
+let tf='';
+function renderPartners(){const q=($('q3').value||'').toLowerCase();$('typeFilter').innerHTML=['',...Object.keys(V)].map(t=>`<button class="chip ${tf===t?'v':''}" data-t="${t}" style="cursor:pointer;padding:5px 12px;font-size:13px">${t?V[t].full:'ทุกประเภท'}</button>`).join('');
+  document.querySelectorAll('#typeFilter .chip').forEach(c=>c.onclick=()=>{tf=c.dataset.t;renderPartners()});
+  $('pgrid').innerHTML=partners.map(p=>{const vs=p.vehicles.filter(v=>(!tf||v.type===tf)&&(!q||(v.plate+v.model+p.name).toLowerCase().includes(q)));if((tf||q)&&!vs.length)return'';
+    return `<div class="pcard"><div class="ph"><div class="av">${p.name[0]}</div><div><b>${p.name}</b><small>📞 ${p.phone}${p.line?' · 💬 '+p.line:''} · <span class="stars">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)}</span></small></div><div class="act"><a class="btn btn-soft sm" href="tel:${p.phone}">โทร</a>${p.line?`<a class="btn sm" style="background:#E5F9EC;color:#06A047" href="#">LINE</a>`:''}</div></div>
+    ${p.note?`<div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:6px">📝 ${p.note}</div>`:''}
+    ${vs.map(v=>`<div class="veh ${v.active?'':'off'}"><span class="plate">${v.plate.split(' ').slice(0,2).join(' ')}</span><div class="info"><b>${V[v.type].full}</b><small>${v.model} · ${v.plate.split(' ').pop()}</small></div><div class="cost">สนามบิน <b>${baht(v.costAirport)}</b>รายวัน <b>${baht(v.costDaily)}</b></div><button class="sw ${v.active?'on':''}" data-v="${v.id}" title="เปิด/ปิดใช้งาน"></button></div>`).join('')}</div>`}).join('');
+  document.querySelectorAll('.sw[data-v]').forEach(b=>b.onclick=()=>{const v=allVehicles().find(x=>x.id===+b.dataset.v);const real=partners.flatMap(p=>p.vehicles).find(x=>x.id===v.id);real.active=!real.active;renderPartners();toast(`${real.plate} ${real.active?'เปิดใช้งาน':'ปิดชั่วคราว'}`)})}
+$('addVehicle').onclick=()=>openModal(`<h3>เพิ่มรถพาร์ทเนอร์</h3><div class="grid2"><div class="f"><label>พาร์ทเนอร์</label><div class="in"><select id="mvP">${partners.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div></div><div class="f"><label>ประเภท</label><div class="in"><select id="mvT">${Object.entries(V).map(([k,v])=>`<option value="${k}">${v.full}</option>`).join('')}</select></div></div><div class="f"><label>ทะเบียน</label><div class="in"><input id="mvPl" placeholder="ฮข 1234 ภูเก็ต"></div></div><div class="f"><label>ยี่ห้อ/รุ่น/ปี</label><div class="in"><input id="mvM" placeholder="Toyota Commuter 2023"></div></div><div class="f"><label>ทุนสนามบิน</label><div class="in"><input id="mvA" type="number" placeholder="900"><span class="u">฿</span></div></div><div class="f"><label>ทุนรายวัน 8 ชม.</label><div class="in"><input id="mvD" type="number" placeholder="2200"><span class="u">฿</span></div></div></div><div class="actions" style="margin-top:16px;justify-content:flex-end"><button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button><button class="btn btn-teal" id="mvSave">บันทึก</button></div>`,()=>{$('mvSave').onclick=()=>{const p=partners.find(x=>x.id===+$('mvP').value);if(!$('mvPl').value.trim())return toast('ใส่ทะเบียนก่อนนะ');p.vehicles.push({id:Date.now(),plate:$('mvPl').value,type:$('mvT').value,model:$('mvM').value||'—',costAirport:+$('mvA').value||0,costDaily:+$('mvD').value||0,active:true});closeModal();renderPartners();toast('เพิ่มรถแล้ว ✓')}});
+$('addPartner').onclick=()=>openModal(`<h3>เพิ่มพาร์ทเนอร์</h3><div class="grid2"><div class="f"><label>ชื่อ / ชื่อเล่น</label><div class="in"><input id="mpN" placeholder="พี่หนุ่ม (ถลาง)"></div></div><div class="f"><label>เบอร์โทร</label><div class="in"><input id="mpP" placeholder="08x-xxx-xxxx"></div></div><div class="f"><label>LINE ID</label><div class="in"><input id="mpL"></div></div><div class="f"><label>เรตติ้งภายใน</label><div class="in"><select id="mpR"><option value="5">★★★★★</option><option value="4" selected>★★★★</option><option value="3">★★★</option></select></div></div><div class="f" style="grid-column:1/-1"><label>บันทึก</label><div class="in"><input id="mpNote" placeholder="จุดเด่น / ข้อควรระวัง"></div></div></div><div class="actions" style="margin-top:16px;justify-content:flex-end"><button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button><button class="btn btn-teal" id="mpSave">บันทึก</button></div>`,()=>{$('mpSave').onclick=()=>{if(!$('mpN').value.trim())return toast('ใส่ชื่อก่อนนะ');partners.push({id:Date.now(),name:$('mpN').value,phone:$('mpP').value,line:$('mpL').value,rating:+$('mpR').value,note:$('mpNote').value,vehicles:[]});closeModal();renderPartners();toast('เพิ่มพาร์ทเนอร์แล้ว ✓')}});
+function openModal(html,after){$('modalBox').innerHTML=html;$('modal').classList.add('show');$('overlay').classList.add('show');after&&after()}
+function closeModal(){$('modal').classList.remove('show');if(!$('drawer').classList.contains('show'))$('overlay').classList.remove('show')}
+
+// ---- drawer ----
+function openDrawer(id){const r=requests.find(x=>x.id===id);const vs=allVehicles().filter(v=>v.type===r.v&&v.active);const idx=ORDER.indexOf(r.status);const next=ORDER[idx+1];const cost=r.cost||0,price=r.price||0,margin=price-cost;
+  const lineText=encodeURIComponent(`สวัสดีคุณ${r.name} จาก Phuket Transfer Hub เรื่องคำขอ #${r.code} นะครับ`);
+  $('drawer').innerHTML=`<div class="dh"><div><h2>${r.code}</h2><span class="pill" style="background:${ST[r.status].w};color:${ST[r.status].c}"><i style="background:${ST[r.status].c}"></i>${ST[r.status].n}</span> <small style="color:var(--ink-faint)">รับเมื่อ ${ago(r.created)}ที่แล้ว</small></div><button class="x" onclick="closeDrawer()">✕</button></div>
+  <div class="db">
+    <div class="actions">${next&&next!=='CANCELLED'?`<button class="btn btn-teal" onclick="setStatus(${r.id},'${next}','')">→ ${ST[next].n}</button>`:''}${['NEW','SOURCING','QUOTED'].includes(r.status)?`<button class="btn btn-danger" onclick="setStatus(${r.id},'CANCELLED','')">ยกเลิก</button>`:''}${r.status==='CANCELLED'?`<button class="btn btn-ghost" onclick="setStatus(${r.id},'NEW','เปิดใหม่')">เปิดใหม่</button>`:''}</div>
+    <div class="sec"><h4>👤 ลูกค้า <span class="r">${r.company?'<span class="chip p">บริษัท · วางบิลได้</span>':''}</span></h4>
+      <div class="kv"><div><span class="k">ชื่อ</span><span class="v">${r.name}</span></div><div><span class="k">เบอร์</span><span class="v">${r.phone}</span></div>${r.company?`<div class="full"><span class="k">บริษัท</span><span class="v">${r.company}</span></div>`:''}<div><span class="k">สะดวกทาง</span><span class="v">${r.chan==='LINE'?'💬 LINE':'📞 โทร'}</span></div><div><span class="k">LINE</span><span class="v">${r.lineLinked?'<span style="color:#06A047">✓ ผูกแชทแล้ว (ทักมาพร้อมเลข)</span>':'<span style="color:var(--ink-faint)">ยังไม่ทักมา — โทรแทน</span>'}</span></div></div>
+      <div class="actions" style="margin-top:10px"><a class="btn btn-soft sm" href="tel:${r.phone}">📞 โทร</a>${r.lineLinked?`<a class="btn sm" style="background:#E5F9EC;color:#06A047" href="#" onclick="toast('เปิดแชท LINE OA กับ ${r.name}','line');return false">💬 เปิดแชท LINE</a>`:''}<button class="btn btn-ghost sm" onclick="navigator.clipboard&&navigator.clipboard.writeText('${r.code}');toast('คัดลอก ${r.code}')">คัดลอกเลข</button></div></div>
+    <div class="sec"><h4>🧭 การเดินทาง</h4><div class="kv"><div><span class="k">รถ</span><span class="v">${V[r.v].full}${r.count>1?' × '+r.count+' คัน':''}</span></div><div><span class="k">รูปแบบ</span><span class="v">${SV[r.sv]}${r.sv==='DAILY'?' (8 ชม. OT 300/ชม. น้ำมันแยก)':''}</span></div><div><span class="k">วัน-เวลา</span><span class="v">${thDate(r.date)} ${r.time}</span></div><div><span class="k">ผู้โดยสาร</span><span class="v">${r.pax} คน · กระเป๋า ${r.lug} ใบ${r.pax>V[r.v].s*r.count?' <span style="color:var(--coral-deep)">⚠ เกินที่นั่ง</span>':''}</span></div><div class="full"><span class="k">เส้นทาง</span><span class="v">${r.route}</span></div>${r.flight?`<div><span class="k">เที่ยวบิน</span><span class="v">✈️ ${r.flight}</span></div>`:''}${r.plan?`<div class="full"><span class="k">แผนเที่ยว</span><span class="v">${r.plan}</span></div>`:''}${r.note?`<div class="full"><span class="k">หมายเหตุลูกค้า</span><span class="v" style="color:var(--coral-deep)">📝 ${r.note}</span></div>`:''}</div></div>
+    <div class="sec"><h4>🚐 รถที่จัดให้ <span class="r">${vs.length} คันตรงประเภท (เปิดใช้งาน)</span></h4>${vs.length?vs.map(v=>`<div class="vopt ${r.vehicleId===v.id?'on':''}" onclick="assign(${r.id},${v.id})"><span class="plate">${v.plate.split(' ').slice(0,2).join(' ')}</span><span>${v.partner.name} <span class="stars">${'★'.repeat(v.partner.rating)}</span></span><small>ทุน ${r.sv==='DAILY'||r.sv==='MULTI'?baht(v.costDaily)+'/วัน':baht(v.costAirport)}</small></div>`).join(''):'<div class="empty">ไม่มีรถประเภทนี้ในเครือข่าย — ลองประเภทใกล้เคียง หรือเพิ่มพาร์ทเนอร์</div>'}</div>
+    <div class="sec"><h4>💰 ราคา</h4>${r.sv==='DAILY'||r.sv==='MULTI'?`<div class="grid3"><div class="f"><label>ทุนเหมา/วัน</label><div class="in"><input type="number" id="pCost" value="${r.cost||''}" placeholder="2200"><span class="u">฿</span></div></div><div class="f"><label>ขายเหมา/วัน</label><div class="in"><input type="number" id="pPrice" value="${r.price||''}" placeholder="3000"><span class="u">฿</span></div></div><div class="f"><label>OT/ชม.</label><div class="in"><input type="number" id="pOt" value="300"><span class="u">฿</span></div></div></div><div style="font-size:12.5px;color:var(--ink-soft);margin-top:8px">⛽ น้ำมัน: <label><input type="radio" name="fuel" checked> แยก จ่ายตามจริง</label> &nbsp; <label><input type="radio" name="fuel"> รวมในราคาเหมา</label></div>`:`<div class="grid2"><div class="f"><label>ราคาทุน (จ่ายพาร์ทเนอร์)</label><div class="in"><input type="number" id="pCost" value="${r.cost||''}" placeholder="900"><span class="u">฿</span></div></div><div class="f"><label>ราคาขาย (เสนอลูกค้า)</label><div class="in"><input type="number" id="pPrice" value="${r.price||''}" placeholder="1400"><span class="u">฿</span></div></div></div>`}
+      <div class="margin ${price&&margin<0?'bad':''}" id="marginBox">${price?`<span>กำไร${r.sv==='DAILY'||r.sv==='MULTI'?'/วัน':''} (${Math.round(margin/price*100)}%)</span><b>${baht(margin)}</b>`:`<span style="color:var(--ink-faint)">ใส่ราคาขายเพื่อดูกำไร</span><b style="color:var(--ink-faint)">—</b>`}</div>
+      <div class="actions" style="margin-top:10px"><button class="btn btn-teal sm" onclick="savePrice(${r.id})">บันทึกราคา</button>${r.price?`<button class="btn sm" style="background:#E5F9EC;color:#06A047" onclick="toast('ส่งราคา ${baht(r.price)} เข้าแชท LINE ของ ${r.name} แล้ว','line');setStatus(${r.id},'QUOTED','ส่งราคา ${baht(r.price)} ทาง LINE')">💬 ส่งราคาทาง LINE</button>`:''}</div></div>
+    <div class="sec"><h4>💳 ชำระเงิน</h4><div class="grid3"><div class="f"><label>เงื่อนไข</label><div class="in"><select id="pTerm">${Object.entries(PAY).map(([k,v])=>`<option value="${k}" ${r.pay===k?'selected':''}>${v}</option>`).join('')}</select></div></div><div class="f"><label>ต้องชำระ</label><div class="in"><input readonly value="${r.pay==='DEP50'?baht(Math.round(price*.5)):r.pay==='CREDIT'?'วางบิล':baht(price)}"></div></div><div class="f"><label>รับแล้ว</label><div class="in"><input type="number" id="pPaid" value="${r.paid||''}" placeholder="0"><span class="u">฿</span></div></div></div><div style="font-size:12px;color:var(--ink-faint);margin-top:6px">เฟส 1 กรอกมือหลังเช็กสลิปใน LINE · เฟส 3 ต่อ PromptPay + อัปโหลดสลิป</div></div>
+    <div class="sec"><h4>📝 บันทึกภายใน</h4><div class="in"><textarea id="pNote" rows="2" placeholder="เช่น ลูกค้าขอรถสีขาว / พาร์ทเนอร์ขอมัดจำ 500">${r.adminNote||''}</textarea></div></div>
+    <div class="sec"><h4>🕓 ไทม์ไลน์</h4><ul class="tl">${[...r.log].reverse().map(([s,n])=>`<li><div><b style="color:${ST[s].c}">${ST[s].n}</b> ${n?'— '+n:''}<small>คุณปานุวัฒน์</small></div></li>`).join('')}</ul>${r.cancelReason?`<div class="empty" style="margin-top:8px;color:var(--coral-deep);border-color:var(--coral-wash)">เหตุผลยกเลิก: ${r.cancelReason}</div>`:''}</div>
+  </div>
+  <div class="df"><button class="btn btn-ghost" onclick="closeDrawer()">ปิด</button><button class="btn btn-teal" style="margin-left:auto" onclick="saveAll(${r.id})">บันทึกทั้งหมด</button></div>`;
+  $('drawer').classList.add('show');$('overlay').classList.add('show');
+  ['pCost','pPrice'].forEach(id=>{const el=$(id);if(el)el.oninput=()=>{const c=+$('pCost').value||0,p=+$('pPrice').value||0;const mb=$('marginBox');mb.classList.toggle('bad',p>0&&p-c<0);mb.innerHTML=p?`<span>กำไร (${Math.round((p-c)/p*100)}%)</span><b>${baht(p-c)}</b>`:`<span style="color:var(--ink-faint)">ใส่ราคาขายเพื่อดูกำไร</span><b style="color:var(--ink-faint)">—</b>`}})}
+function closeDrawer(){$('drawer').classList.remove('show');$('overlay').classList.remove('show')}
+$('overlay').onclick=()=>{closeDrawer();closeModal()};
+function assign(id,vid){const r=requests.find(x=>x.id===id);const v=allVehicles().find(x=>x.id===vid);r.vehicleId=vid;if(!r.cost)r.cost=r.sv==='DAILY'||r.sv==='MULTI'?v.costDaily:v.costAirport;r.log.push([r.status,`เลือกรถ ${v.plate} (${v.partner.name})`]);if(r.status==='NEW')r.status='SOURCING';toast(`จัดรถ ${v.plate} ให้ ${r.code}`);renderAll();openDrawer(id)}
+function savePrice(id){const r=requests.find(x=>x.id===id);r.cost=+$('pCost').value||0;r.price=+$('pPrice').value||0;r.log.push([r.status,`ตั้งราคา ทุน ${baht(r.cost)} ขาย ${baht(r.price)}`]);toast('บันทึกราคาแล้ว ✓');renderAll();openDrawer(id)}
+function saveAll(id){const r=requests.find(x=>x.id===id);if($('pCost')){r.cost=+$('pCost').value||r.cost;r.price=+$('pPrice').value||r.price}r.pay=$('pTerm').value;r.paid=+$('pPaid').value||0;r.adminNote=$('pNote').value;toast('บันทึกแล้ว ✓');renderAll();closeDrawer()}
+
+// ---- simulate incoming ----
+const NAMES=['คุณมิ้นท์','คุณบอล','คุณฝน','Mr. Tanaka','คุณเจน','บ.ภูเก็ตทัวร์'];const ROUTES=[['AIRPORT','สนามบินภูเก็ต → Katathani กะตะ','SEDAN',2],['P2P','ป่าตอง → ท่าเรือรัษฎา','VIP8',6],['DAILY','รับที่ ราไวย์ · เที่ยว 8 ชม.','VIP10',9],['AIRPORT','Le Meridien กะรน → สนามบินภูเก็ต','SUV',4]];
+$('simulate').onclick=()=>{seq++;const rt=ROUTES[Math.floor(Math.random()*ROUTES.length)];const r={id:Date.now(),code:'PTH-2026-'+String(seq).padStart(4,'0'),status:'NEW',created:Date.now(),v:rt[2],count:1,sv:rt[0],date:'2026-11-0'+(1+Math.floor(Math.random()*9)),time:['06:00','09:00','13:30','18:00'][Math.floor(Math.random()*4)],route:rt[1],pax:rt[3],lug:rt[3]-1,name:NAMES[Math.floor(Math.random()*NAMES.length)],phone:'08'+Math.floor(10000000+Math.random()*89999999).toString().replace(/(\d)(\d{4})(\d{4})/,'$1-$2-$3'),chan:'LINE',lineLinked:Math.random()>.4,note:'',pay:rt[0]==='AIRPORT'?'FULL':'DEP50',log:[['NEW','ลูกค้าส่งฟอร์ม']]};
+  requests.unshift(r);renderAll();toast(`<span class="t">💬 LINE:</span> ขอราคาใหม่ #${r.code} · ${V[r.v].n} · ${r.route}`,'line')};
+
+function renderAll(){renderBoard();renderList();renderPartners()}
+['q','q2','q3'].forEach(id=>$(id).oninput=renderAll);
+renderAll();
+</script>
+</body>
+</html>

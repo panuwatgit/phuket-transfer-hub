@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── enums ──────────────────────────────────────────────────────────────────
+
+enum VehicleType {
+  VAN_VIP8
+  VAN_VIP10
+  SUV
+  SEDAN
+}
+
+enum ServiceType {
+  AIRPORT
+  POINT_TO_POINT
+  DAILY_CHARTER
+  MULTI_DAY
+}
+
+enum RequestStatus {
+  NEW
+  SOURCING
+  QUOTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentTerm {
+  FULL_PREPAID
+  DEPOSIT_50
+  CREDIT
+}
+
+enum ContactChannel {
+  LINE
+  PHONE
+  WHATSAPP
+  EMAIL
+}
+
+enum AirportDirection {
+  FROM_AIRPORT
+  TO_AIRPORT
+}
+
+// ── partners & vehicles ────────────────────────────────────────────────────
+
+model Partner {
+  id        Int       @id @default(autoincrement())
+  name      String
+  phone     String
+  lineId    String?
+  rating    Int       @default(4) // internal 1–5
+  note      String?
+  active    Boolean   @default(true)
+  vehicles  Vehicle[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Vehicle {
+  id          Int         @id @default(autoincrement())
+  partnerId   Int
+  partner     Partner     @relation(fields: [partnerId], references: [id])
+  type        VehicleType
+  plate       String
+  model       String?
+  seats       Int
+  photoUrl    String?
+  costAirport Int? // ทุนอ้างอิง รับส่งสนามบิน (บาท)
+  costDaily   Int? // ทุนอ้างอิง เหมา 8 ชม. (บาท)
+  active      Boolean     @default(true)
+  note        String?
+  requests    BookingRequest[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([type, active])
+}
+
+// ── requests ───────────────────────────────────────────────────────────────
+
+model BookingRequest {
+  id     Int           @id @default(autoincrement())
+  code   String        @unique // PTH-2026-0001
+  status RequestStatus @default(NEW)
+  lang   String        @default("th") // ภาษาที่ลูกค้าใช้กรอก (th/en) → ตอบภาษานั้น
+
+  // step 1 — vehicle
+  vehicleType  VehicleType
+  vehicleCount Int         @default(1)
+
+  // step 2 — trip
+  serviceType   ServiceType
+  direction     AirportDirection?
+  pickupDate    DateTime          @db.Date
+  pickupTime    String // "HH:mm"
+  pickupPlace   String
+  dropoffPlace  String?
+  dropoffProvince String?
+  roundTrip     Boolean           @default(false)
+  returnDate    DateTime?         @db.Date
+  returnTime    String?
+  flightNo      String?
+  days          Int? // DAILY_CHARTER / MULTI_DAY
+  itinerary     String?
+  passengers    Int
+  luggage       Int               @default(0)
+
+  // step 3 — contact
+  customerName   String
+  phone          String
+  lineId         String?
+  email          String?
+  company        String?
+  contactChannel ContactChannel @default(LINE)
+  customerNote   String?
+
+  // LINE linkage (filled by webhook when customer sends the prefilled message)
+  lineUserId   String?
+  lineLinkedAt DateTime?
+
+  // admin — sourcing & pricing
+  vehicleId    Int?
+  vehicle      Vehicle? @relation(fields: [vehicleId], references: [id])
+  costPrice    Int? // ทุนจ่ายพาร์ทเนอร์ (ต่อเที่ยว หรือ ต่อวัน)
+  sellPrice    Int? // ราคาขาย (ต่อเที่ยว หรือ ต่อวัน)
+  otRate       Int      @default(300)
+  otHours      Int      @default(0)
+  fuelIncluded Boolean  @default(false)
+
+  // admin — payment
+  paymentTerm PaymentTerm @default(FULL_PREPAID)
+  amountPaid  Int         @default(0)
+  paidAt      DateTime?
+
+  adminNote    String?
+  cancelReason String?
+
+  statusLogs StatusLog[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([status, createdAt])
+  @@index([pickupDate])
+  @@index([lineUserId])
+}
+
+model StatusLog {
+  id         Int            @id @default(autoincrement())
+  requestId  Int
+  request    BookingRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  fromStatus RequestStatus?
+  toStatus   RequestStatus
+  note       String?
+  actor      String         @default("admin")
+  createdAt  DateTime       @default(now())
+
+  @@index([requestId, createdAt])
+}
+
+// running number per year: key = "request:2026"
+model Counter {
+  key   String @id
+  value Int    @default(0)
+}
