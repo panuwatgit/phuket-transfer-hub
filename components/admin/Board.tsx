@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import type { BookingRequest, RequestStatus } from "@prisma/client";
 import { STATUSES, STATUS_ORDER } from "@/lib/config";
 import { baht, minutesSince } from "@/lib/format";
@@ -13,6 +13,11 @@ export function Board({ requests, now }: { requests: BookingRequest[]; now: Date
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [local, setLocal] = useState(requests);
   const [, start] = useTransition();
+  useEffect(() => {
+    const clear = () => { setDraggingId(null); setOver(null); };
+    window.addEventListener("dragend", clear); window.addEventListener("drop", clear);
+    return () => { window.removeEventListener("dragend", clear); window.removeEventListener("drop", clear); };
+  }, []);
   // props เปลี่ยน (หลัง revalidate) → sync
   const [prev, setPrev] = useState(requests);
   if (prev !== requests) { setPrev(requests); setLocal(requests); }
@@ -28,8 +33,9 @@ export function Board({ requests, now }: { requests: BookingRequest[]; now: Date
   const month = now.getMonth(), year = now.getFullYear();
   const profit = local.filter((r) => ["CONFIRMED", "COMPLETED"].includes(r.status) && r.pickupDate.getMonth() === month && r.pickupDate.getFullYear() === year).reduce((a, r) => a + ((r.sellPrice ?? 0) - (r.costPrice ?? 0)) * (r.days ?? 1) + r.otHours * r.otRate, 0);
 
+  // การ์ดถูกย้ายคอลัมน์ตอน drop → element เดิมหายไปก่อน dragend ยิง เลยต้องล้างสถานะ dragging ตรงนี้ด้วย
   function drop(status: RequestStatus, e: React.DragEvent) {
-    e.preventDefault(); setOver(null);
+    e.preventDefault(); setOver(null); setDraggingId(null);
     const id = Number(e.dataTransfer.getData("text/plain"));
     const r = local.find((x) => x.id === id);
     if (!r || r.status === status) return;
