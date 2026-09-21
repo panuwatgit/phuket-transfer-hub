@@ -101,7 +101,10 @@ export const VEHICLE_IMAGE: Partial<Record<VehicleType, { src: string; w: number
 
 /** รูปบรรยากาศจริง (หน้าแรก "บรรยากาศในรถ") — เพิ่มได้เรื่อย ๆ วางไฟล์ใน public/gallery/ */
 export const GALLERY: { src: string; alt: { th: string; en: string }; w: number; h: number }[] = [
-  { src: "/gallery/vip-interior-1.jpg", alt: { th: "รถตู้ VIP: เบาะหนังปรับเอน 8 ที่นั่ง พร้อมน้ำดื่ม", en: "VIP van: 8 reclining leather seats with drinking water" }, w: 600, h: 800 },
-  { src: "/gallery/vip-interior-2.jpg", alt: { th: "รถตู้ VIP: กัปตันซีท ที่วางแขน ที่วางแก้ว", en: "VIP van: captain seats with armrests and cup holders" }, w: 600, h: 800 },
-  { src: "/gallery/vip-interior-3.jpg", alt: { th: "รถตู้ VIP: เพดานไฟดาว ไฟแอมเบียนท์ ทางเดินกลาง", en: "VIP van: starlight ceiling, ambient lighting, centre aisle" }, w: 600, h: 800 },
+  { src: "/gallery/vip-interior-1.jpg", alt: { th: "รถตู้ VIP 8 ที่นั่ง: เบาะหนังปรับเอน พร้อมน้ำดื่ม", en: "VIP 8-seater: reclining leather seats with drinking water" }, w: 600, h: 800 },
+  { src: "/gallery/vip-interior-2.jpg", alt: { th: "รถตู้ VIP 8 ที่นั่ง: กัปตันซีท ที่วางแขน ที่วางแก้ว", en: "VIP 8-seater: captain seats with armrests and cup holders" }, w: 600, h: 800 },
+  { src: "/gallery/vip-interior-3.jpg", alt: { th: "รถตู้ VIP 8 ที่นั่ง: เพดานไฟดาว ไฟแอมเบียนท์ ทางเดินกลาง", en: "VIP 8-seater: starlight ceiling, ambient lighting, centre aisle" }, w: 600, h: 800 },
+  { src: "/gallery/vip10-interior-1.jpg", alt: { th: "รถตู้ VIP 10 ที่นั่ง: เบาะหนัง 3 แถว กว้าง นั่งสบายทั้งกรุ๊ป", en: "VIP 10-seater: three rows of wide leather seats for the whole group" }, w: 1400, h: 1050 },
+  { src: "/gallery/vip10-interior-2.jpg", alt: { th: "รถตู้ VIP 10 ที่นั่ง: ประตูสไลด์ ขึ้น-ลงสะดวก ผ้าม่านทุกบาน", en: "VIP 10-seater: sliding door, easy boarding, curtains on every window" }, w: 1050, h: 1400 },
+  { src: "/gallery/vip10-interior-3.jpg", alt: { th: "รถตู้ VIP 10 ที่นั่ง: ที่วางแก้ว ไฟแอมเบียนท์ ห้องโดยสารกว้าง", en: "VIP 10-seater: cup holders, ambient lighting, roomy cabin" }, w: 1050, h: 1400 },
 ];
