@@ -13,3 +13,11 @@
 | `png/` | PNG ความละเอียดสูงสำหรับที่ที่ใช้ SVG ไม่ได้ |
 
 สี: teal `#14B8A6` · teal-deep `#0F9488` · coral `#FF6B6B` · sun `#FFC93C` · ink `#1A2B3C` · cream `#FFFBF5` · ฟอนต์ Kanit
+
+## ไดคัตรูปรถ (ตัดฉากหลัง)
+`tools/brand/cutout.swift` ใช้ Vision ของ macOS — คอมไพล์ครั้งเดียวแล้วใช้กับรูปอื่นได้:
+```bash
+swiftc -O -o /tmp/cutout tools/brand/cutout.swift
+/tmp/cutout input.jpg public/vehicles/<type>-cutout.png
+```
+แล้วเพิ่มใน `VEHICLE_IMAGE` (lib/config.ts)

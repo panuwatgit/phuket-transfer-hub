@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { VEHICLES, VEHICLE_ORDER, VEHICLE_PHOTOS } from "@/lib/config";
+import Image from "next/image";
+import { VEHICLES, VEHICLE_ORDER, VEHICLE_IMAGE } from "@/lib/config";
 import { getDict, href, type Lang } from "@/lib/i18n";
 import { VehicleArt } from "@/components/ui/VehicleArt";
-import { Gallery } from "@/components/ui/Gallery";
 
 function Card({ k, delay, lang }: { k: (typeof VEHICLE_ORDER)[number]; delay: number; lang: Lang }) {
   const t = getDict(lang);
-  const v = VEHICLES[k], tv = t.vehicle[k], photos = VEHICLE_PHOTOS[k];
+  const v = VEHICLES[k], tv = t.vehicle[k], img = VEHICLE_IMAGE[k];
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current!;
@@ -27,10 +27,10 @@ function Card({ k, delay, lang }: { k: (typeof VEHICLE_ORDER)[number]; delay: nu
   const badgeCls = k === "VAN_VIP8" ? "bg-coral-wash text-coral-deep" : "bg-sun-wash text-[#8A6200]";
   return (
     <div ref={ref} className="vcard reveal" style={{ transitionDelay: `${delay}ms` }}>
-      <span className={`absolute top-4 right-4 z-[1] kanit text-xs font-medium px-2.5 py-1 rounded-full ${badgeCls}`}>{tv.badge}</span>
-      {photos?.length
-        ? <div className="-mx-[22px] -mt-[22px] mb-4 aspect-[4/3]"><Gallery photos={photos} lang={lang} label={t.vehicle.photos(photos.length)} className="h-full !rounded-b-none !rounded-t-[20px]" /></div>
-        : <div className="art h-[110px] grid place-items-center mb-3.5"><VehicleArt type={k} className="w-[150px]" /></div>}
+      <span className={`absolute top-4 right-4 kanit text-xs font-medium px-2.5 py-1 rounded-full ${badgeCls}`}>{tv.badge}</span>
+      <div className="art h-[110px] grid place-items-center mb-3.5">
+        {img ? <Image src={img.src} alt={tv.name} width={img.w} height={img.h} sizes="200px" className="h-[104px] w-auto drop-shadow-[0_14px_18px_rgba(26,43,60,.22)]" /> : <VehicleArt type={k} className="w-[150px]" />}
+      </div>
       <h3 className="text-[22px] font-semibold">{tv.name}</h3>
       <p className="text-ink-soft text-sm mt-0.5 mb-3.5">{tv.tagline}</p>
       <div className="seats flex gap-[5px] flex-wrap mb-1.5">{Array.from({ length: v.seats }).map((_, i) => <span key={i} style={{ transitionDelay: `${i * 60}ms` }} />)}</div>
