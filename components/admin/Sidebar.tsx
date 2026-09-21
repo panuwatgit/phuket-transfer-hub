@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BRAND } from "@/lib/config";
 import { logout } from "@/app/admin/actions";
+import { BrandMark } from "@/components/ui/BrandMark";
 
 const NAV = [
   { href: "/admin", icon: "📋", label: "กระดาน" },
@@ -21,8 +21,8 @@ export function Sidebar({ newCount }: { newCount: number }) {
     <>
       <aside className="hidden md:flex bg-white border-r border-line px-3.5 py-[18px] flex-col gap-1.5 sticky top-0 h-screen">
         <Link href="/admin" className="flex items-center gap-2.5 kanit font-semibold text-base px-2 pb-[18px]">
-          <span className="w-9 h-9 rounded-[11px] bg-teal grid place-items-center text-white text-xs -rotate-6">{BRAND.short}</span>
-          <span>Transfer Hub<small className="block text-[11px] font-normal text-ink-soft leading-none">หลังบ้าน</small></span>
+          <BrandMark size={40} className="-my-1" />
+          <span>Transfer <span className="text-coral">Hub</span><small className="block text-[11px] font-normal text-ink-soft leading-none mt-0.5">หลังบ้าน</small></span>
         </Link>
         {NAV.map((n) => (
           <Link key={n.href} href={n.href} className={`anav ${isOn(n.href) ? "on" : ""}`}>

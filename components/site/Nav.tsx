@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { BRAND, lineAddFriendUrl, whatsappUrl } from "@/lib/config";
 import { getDict, href, type Lang } from "@/lib/i18n";
+import { BrandMark } from "@/components/ui/BrandMark";
 
 export function Logo({ lang = "th", sub = BRAND.slogan }: { lang?: Lang; sub?: string }) {
   return (
     <Link href={href(lang)} className="flex items-center gap-2.5 font-[family-name:var(--font-display)] font-semibold text-lg">
-      <span className="w-10 h-10 rounded-xl bg-teal text-white grid place-items-center text-sm tracking-wide -rotate-6 shadow-[0_8px_16px_-6px_rgba(20,184,166,.6)]">{BRAND.short}</span>
-      <span>{BRAND.name}<small className="block text-[11px] font-normal text-ink-soft leading-none">{sub}</small></span>
+      <BrandMark size={44} className="drop-shadow-[0_8px_12px_rgba(20,184,166,.35)] -my-1" />
+      <span>Phuket Transfer <span className="text-coral">Hub</span><small className="block text-[11px] font-normal text-ink-soft leading-none mt-0.5">{sub}</small></span>
     </Link>
   );
 }

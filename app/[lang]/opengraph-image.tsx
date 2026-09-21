@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { BRAND } from "@/lib/config";
+import { PTH_PATH } from "@/components/ui/brand-paths";
 
 // รูปตอนแชร์ลิงก์ใน LINE / Facebook / WhatsApp — สร้างจากโค้ด ไม่ต้องทำรูป
 export const alt = "Phuket Transfer Hub";
@@ -24,8 +25,8 @@ export default async function Image({ params }: { params: Promise<{ lang: string
         <div style={{ position: "absolute", right: -80, top: -80, width: 360, height: 360, borderRadius: 999, background: "#FFC93C", opacity: 0.35 }} />
         <div style={{ position: "absolute", left: 620, bottom: -160, width: 420, height: 420, borderRadius: 999, background: "#14B8A6", opacity: 0.18 }} />
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <div style={{ width: 72, height: 72, borderRadius: 22, background: "#14B8A6", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 600, transform: "rotate(-6deg)" }}>PTH</div>
-          <div style={{ fontSize: 34, fontWeight: 600 }}>{BRAND.name}</div>
+          <svg width="84" height="84" viewBox="0 0 64 64"><g transform="rotate(-6 32 32)"><rect x="6" y="6" width="52" height="52" rx="17" fill="#14B8A6" /><path d={PTH_PATH} fill="#fff" /><rect x="16" y="41" width="32" height="4" rx="2" fill="#FFC93C" /><rect x="28" y="41" width="8" height="4" rx="2" fill="#FF6B6B" /></g></svg>
+          <div style={{ fontSize: 34, fontWeight: 600, display: "flex" }}>Phuket Transfer <span style={{ color: "#FF6B6B", marginLeft: 10 }}>Hub</span></div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div style={{ fontSize: en ? 66 : 84, fontWeight: 600, lineHeight: 1.1, display: "flex" }}>
