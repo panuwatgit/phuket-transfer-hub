@@ -8,10 +8,10 @@ const NAV = [
   { href: "/admin", icon: "📋", label: "กระดาน" },
   { href: "/admin/list", icon: "🗂️", label: "รายการทั้งหมด" },
   { href: "/admin/partners", icon: "🚐", label: "พาร์ทเนอร์ & รถ" },
+  { href: "/admin/reports", icon: "📈", label: "รายงาน/บัญชี" },
 ];
 const LATER = [
   { icon: "📅", label: "ปฏิทินรถ" },
-  { icon: "📈", label: "รายงาน" },
 ];
 
 export function Sidebar({ newCount }: { newCount: number }) {
@@ -41,7 +41,7 @@ export function Sidebar({ newCount }: { newCount: number }) {
       </aside>
       <nav className="md:hidden fixed left-0 right-0 bottom-0 bg-white border-t border-line z-[70] p-1.5 flex">
         {NAV.map((n) => (
-          <Link key={n.href} href={n.href} className={`flex-1 text-center kanit text-xs py-2 px-1 rounded-[10px] ${isOn(n.href) ? "text-teal-deep bg-teal-wash" : "text-ink-soft"}`}>{n.icon} {n.label.replace("ทั้งหมด", "").replace("พาร์ทเนอร์ & ", "")}</Link>
+          <Link key={n.href} href={n.href} className={`flex-1 text-center kanit text-xs py-2 px-1 rounded-[10px] ${isOn(n.href) ? "text-teal-deep bg-teal-wash" : "text-ink-soft"}`}>{n.icon} {n.label.replace("ทั้งหมด", "").replace("พาร์ทเนอร์ & ", "").replace("/บัญชี", "")}</Link>
         ))}
       </nav>
     </>

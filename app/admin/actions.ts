@@ -275,3 +275,72 @@ export async function sendDocumentLink(id: number) {
   const sent = d.request.lineUserId ? await pushToUser(d.request.lineUserId, text) : false;
   return { ok: true as const, sent, text, url };
 }
+
+// ── expenses & attachments ─────────────────────────────────────────────────
+import type { ExpenseCategory } from "@prisma/client";
+import { ATTACHMENT_TYPES, MAX_ATTACHMENT } from "@/lib/expenses";
+
+async function readFiles(formData: FormData, key = "files") {
+  const out: { filename: string; mime: string; size: number; data: Uint8Array<ArrayBuffer> }[] = [];
+  for (const f of formData.getAll(key)) {
+    if (!(f instanceof File) || f.size === 0) continue;
+    if (f.size > MAX_ATTACHMENT) throw new Error(`ไฟล์ ${f.name} ใหญ่เกิน 4MB`);
+    if (!ATTACHMENT_TYPES.includes(f.type)) throw new Error(`ไฟล์ ${f.name} ต้องเป็นรูปหรือ PDF`);
+    out.push({ filename: f.name, mime: f.type, size: f.size, data: new Uint8Array(await f.arrayBuffer()) });
+  }
+  return out;
+}
+
+/** เพิ่มรายจ่าย (FormData: requestId?, partnerId?, category, amount, paidAt, method, payee, note, files[]) */
+export async function addExpense(formData: FormData) {
+  await requireAdmin();
+  const num = (k: string) => { const v = formData.get(k); return v ? Number(v) : undefined; };
+  const str = (k: string) => { const v = formData.get(k); return typeof v === "string" && v.trim() ? v.trim() : undefined; };
+  const amount = Math.round(num("amount") ?? 0);
+  if (amount <= 0) return { ok: false as const, error: "ใส่จำนวนเงิน" };
+  const paidAt = str("paidAt");
+  if (!paidAt) return { ok: false as const, error: "เลือกวันที่จ่าย" };
+  const files = await readFiles(formData);
+  const requestId = num("requestId") || null;
+  const e = await prisma.expense.create({
+    data: {
+      requestId, partnerId: num("partnerId") || null,
+      category: (str("category") as ExpenseCategory) ?? "OTHER", amount,
+      paidAt: new Date(paidAt + "T00:00:00Z"), method: str("method") ?? null, payee: str("payee") ?? null, note: str("note") ?? null,
+      attachments: { create: files },
+    },
+  });
+  if (requestId) {
+    const r = await prisma.bookingRequest.findUnique({ where: { id: requestId } });
+    if (r) await prisma.statusLog.create({ data: { requestId, fromStatus: r.status, toStatus: r.status, note: `บันทึกรายจ่าย ${baht(amount)}${str("payee") ? ` → ${str("payee")}` : ""}` } });
+    refresh(requestId);
+  }
+  revalidatePath("/admin/reports");
+  return { ok: true as const, id: e.id };
+}
+
+export async function deleteExpense(id: number) {
+  await requireAdmin();
+  const e = await prisma.expense.delete({ where: { id } });
+  if (e.requestId) refresh(e.requestId);
+  revalidatePath("/admin/reports");
+}
+
+/** แนบสลิปลูกค้าโอนเข้า (หลักฐานรับเงิน) กับ request */
+export async function addRequestAttachment(formData: FormData) {
+  await requireAdmin();
+  const requestId = Number(formData.get("requestId"));
+  const files = await readFiles(formData);
+  if (!files.length) return { ok: false as const, error: "เลือกไฟล์" };
+  await prisma.attachment.createMany({ data: files.map((f) => ({ ...f, requestId })) });
+  refresh(requestId);
+  return { ok: true as const };
+}
+
+export async function deleteAttachment(id: number) {
+  await requireAdmin();
+  const a = await prisma.attachment.delete({ where: { id } });
+  if (a.requestId) refresh(a.requestId);
+  if (a.expenseId) { const e = await prisma.expense.findUnique({ where: { id: a.expenseId } }); if (e?.requestId) refresh(e.requestId); }
+  revalidatePath("/admin/reports");
+}

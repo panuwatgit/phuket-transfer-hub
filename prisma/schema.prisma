@@ -54,6 +54,17 @@ enum DocumentType {
   RECEIPT
 }
 
+enum ExpenseCategory {
+  PARTNER_PAYOUT // จ่ายค่ารถ/คนขับพาร์ทเนอร์
+  FUEL
+  PARKING
+  MEAL // ค่าอาหาร/เบี้ยเลี้ยงคนขับ
+  MAINTENANCE
+  MARKETING
+  FEE // ค่าธรรมเนียม/แพลตฟอร์ม
+  OTHER
+}
+
 // ── partners & vehicles ────────────────────────────────────────────────────
 
 model Partner {
@@ -65,6 +76,7 @@ model Partner {
   note      String?
   active    Boolean   @default(true)
   vehicles  Vehicle[]
+  expenses  Expense[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -148,9 +160,11 @@ model BookingRequest {
   adminNote    String?
   cancelReason String?
 
-  statusLogs StatusLog[]
-  documents  Document[]
-  createdAt  DateTime    @default(now())
+  statusLogs  StatusLog[]
+  documents   Document[]
+  expenses    Expense[]
+  attachments Attachment[]
+  createdAt   DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 
   @@index([status, createdAt])
@@ -208,4 +222,38 @@ model Document {
   voidedAt DateTime?
 
   @@index([requestId, type])
+}
+
+// รายจ่าย — ผูกกับงาน (requestId) หรือทั่วไป (null) · เก็บไว้ทำบัญชี/ภาษี
+model Expense {
+  id        Int             @id @default(autoincrement())
+  requestId Int?
+  request   BookingRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  partnerId Int?
+  partner   Partner?        @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+  category  ExpenseCategory @default(PARTNER_PAYOUT)
+  amount    Int
+  paidAt    DateTime        @db.Date
+  method    String? // TRANSFER / PROMPTPAY / CASH
+  payee     String? // ชื่อผู้รับเงิน (ถ้าไม่ใช่พาร์ทเนอร์ในระบบ)
+  note      String?
+  attachments Attachment[]
+  createdAt DateTime        @default(now())
+
+  @@index([paidAt])
+  @@index([requestId])
+}
+
+// ไฟล์แนบ (สลิปโอน / ใบเสร็จร้านค้า) — เก็บใน DB เพื่อไม่หายตอน deploy ใหม่ (จำกัด ~4MB/ไฟล์)
+model Attachment {
+  id        Int             @id @default(autoincrement())
+  expenseId Int?
+  expense   Expense?        @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  requestId Int? // สลิปลูกค้าโอนเข้า
+  request   BookingRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  filename  String
+  mime      String
+  size      Int
+  data      Bytes
+  createdAt DateTime        @default(now())
 }

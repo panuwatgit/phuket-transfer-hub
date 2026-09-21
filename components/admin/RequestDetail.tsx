@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import type { BookingRequest, Document, Partner, PaymentTerm, StatusLog, Vehicle } from "@prisma/client";
+import type { Attachment, BookingRequest, Document, Expense, Partner, PaymentTerm, StatusLog, Vehicle } from "@prisma/client";
+import { ExpensesPanel } from "./ExpensesPanel";
 import { DocumentsPanel } from "./DocumentsPanel";
 import { NEXT_STATUS, PAYMENT_TERMS, SERVICES, STATUSES, VEHICLES, isCharter } from "@/lib/config";
 import { ago, baht, thDate } from "@/lib/format";
@@ -11,10 +12,10 @@ import { copy, toast } from "./Toast";
 
 const CHANNEL: Record<string, string> = { LINE: "💬 LINE", PHONE: "📞 โทร", WHATSAPP: "💬 WhatsApp", EMAIL: "✉️ อีเมล" };
 
-type Req = BookingRequest & { vehicle: (Vehicle & { partner: Partner }) | null; statusLogs: StatusLog[]; documents: Document[] };
+type Req = BookingRequest & { vehicle: (Vehicle & { partner: Partner }) | null; statusLogs: StatusLog[]; documents: Document[]; expenses: (Expense & { attachments: Pick<Attachment, "id" | "filename" | "mime" | "size">[] })[]; attachments: Pick<Attachment, "id" | "filename" | "mime" | "size">[] };
 type Cand = Vehicle & { partner: Partner };
 
-export function RequestDetail({ r, candidates, now }: { r: Req; candidates: Cand[]; now: Date }) {
+export function RequestDetail({ r, candidates, now, partners }: { r: Req; candidates: Cand[]; now: Date; partners: Pick<Partner, "id" | "name">[] }) {
   const [pending, start] = useTransition();
   const charter = isCharter(r.serviceType);
   const next = NEXT_STATUS[r.status];
@@ -166,6 +167,9 @@ export function RequestDetail({ r, candidates, now }: { r: Req; candidates: Cand
 
         {/* เอกสาร */}
         <DocumentsPanel requestId={r.id} documents={r.documents} total={total} amountPaid={r.amountPaid} hasPrice={!!r.sellPrice} isCompany={!!r.company} lang={r.lang} phone={r.phone} lineLinked={!!r.lineUserId} />
+
+        {/* ค่าใช้จ่าย */}
+        <ExpensesPanel requestId={r.id} expenses={r.expenses} income={r.documents.filter((d) => d.type === "RECEIPT" && !d.voidedAt).reduce((a, d) => a + d.amountPaid, 0)} partners={partners} defaultPartnerId={r.vehicle?.partnerId ?? null} defaultAmount={(r.costPrice ?? 0) * (charter ? days : 1)} slips={r.attachments} />
 
         {/* ไทม์ไลน์ */}
         <section className="sec md:col-span-2">
