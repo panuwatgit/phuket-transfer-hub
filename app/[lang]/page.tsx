@@ -4,6 +4,7 @@ import { Nav, Footer, StickyBar, chatUrl } from "@/components/site/Nav";
 import { Hero } from "@/components/site/Hero";
 import { QuickBar } from "@/components/site/QuickBar";
 import { VehicleCards } from "@/components/site/VehicleCards";
+import { PhotoStrip } from "@/components/site/PhotoStrip";
 import { Counter } from "@/components/site/Counter";
 import { Reveal } from "@/components/ui/Reveal";
 import { BRAND, REVIEWS, SERVICE_ORDER } from "@/lib/config";
@@ -51,10 +52,18 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         </Reveal>
       </div>
 
-      <section id="vehicles" className="py-[90px]">
+      <section id="vehicles" className="pt-[90px] pb-14">
         <div className="max-w-[1140px] mx-auto px-5">
           <SectionHead kicker={t.vehicle.kicker} title={t.vehicle.title} sub={t.vehicle.sub} />
           <VehicleCards lang={lang} />
+        </div>
+      </section>
+
+      {/* บรรยากาศในรถ — รูปจริง */}
+      <section id="gallery" className="pb-[90px]">
+        <div className="max-w-[1140px] mx-auto px-5">
+          <SectionHead kicker={t.gallery.kicker} title={t.gallery.title} sub={t.gallery.sub} />
+          <Reveal><PhotoStrip lang={lang} /></Reveal>
         </div>
       </section>
 

@@ -77,6 +77,7 @@ export const en: Dict = {
       { icon: "🧳", t: "Luggage help", d: "Air-conditioned car, drinking water, and a driver who handles your bags" },
     ],
   },
+  gallery: { kicker: "Inside the van", title: "Real photos from our vans", sub: "Sample VIP vans from our network — the exact car may differ, the standard of comfort and cleanliness doesn't", open: "Tap to enlarge" },
   reviews: {
     kicker: "What customers say", title: "Booked, and the car showed up — every time",
     sample: "Sample reviews — replace with real ones in lib/config.ts",

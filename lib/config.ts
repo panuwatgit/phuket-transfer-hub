@@ -97,3 +97,10 @@ export const REVIEWS: { name: string; where: string; text: { th: string; en: str
 export const VEHICLE_IMAGE: Partial<Record<VehicleType, { src: string; w: number; h: number }>> = {
   VAN_VIP8: { src: "/vehicles/vip8-cutout.png", w: 437, h: 324 },
 };
+
+/** รูปบรรยากาศจริง (หน้าแรก "บรรยากาศในรถ") — เพิ่มได้เรื่อย ๆ วางไฟล์ใน public/gallery/ */
+export const GALLERY: { src: string; alt: { th: string; en: string }; w: number; h: number }[] = [
+  { src: "/gallery/vip-interior-1.jpg", alt: { th: "รถตู้ VIP: เบาะหนังปรับเอน 8 ที่นั่ง พร้อมน้ำดื่ม", en: "VIP van: 8 reclining leather seats with drinking water" }, w: 600, h: 800 },
+  { src: "/gallery/vip-interior-2.jpg", alt: { th: "รถตู้ VIP: กัปตันซีท ที่วางแขน ที่วางแก้ว", en: "VIP van: captain seats with armrests and cup holders" }, w: 600, h: 800 },
+  { src: "/gallery/vip-interior-3.jpg", alt: { th: "รถตู้ VIP: เพดานไฟดาว ไฟแอมเบียนท์ ทางเดินกลาง", en: "VIP van: starlight ceiling, ambient lighting, centre aisle" }, w: 600, h: 800 },
+];
