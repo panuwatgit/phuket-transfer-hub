@@ -2,7 +2,8 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { ServiceType, VehicleType } from "@prisma/client";
-import { CHARTER, PROVINCES, SERVICE_ORDER, VEHICLES, VEHICLE_ORDER, defaultPaymentTerm, isCharter } from "@/lib/config";
+import { CHARTER, PROVINCES, SERVICE_ORDER, VEHICLES, VEHICLE_ORDER, VEHICLE_PHOTOS, defaultPaymentTerm, isCharter } from "@/lib/config";
+import Image from "next/image";
 import { addHours } from "@/lib/format";
 import { fmtDate, getDict, href, type Lang } from "@/lib/i18n";
 import { VehicleArt } from "@/components/ui/VehicleArt";
@@ -147,7 +148,9 @@ export function RequestForm({ lang, prefill }: { lang: Lang; prefill: Prefill })
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {VEHICLE_ORDER.map((k) => (
                   <button type="button" key={k} className={`choice ${s.vehicleType === k ? "on" : ""}`} onClick={() => set("vehicleType", k)}>
-                    <VehicleArt type={k} className="w-full h-14 mb-1" />
+                    {VEHICLE_PHOTOS[k]?.[0]
+                      ? <Image src={VEHICLE_PHOTOS[k]![0].src} alt={VEHICLE_PHOTOS[k]![0].alt[lang]} width={VEHICLE_PHOTOS[k]![0].w} height={VEHICLE_PHOTOS[k]![0].h} sizes="200px" className="w-full h-16 object-cover rounded-lg mb-1.5" />
+                      : <VehicleArt type={k} className="w-full h-14 mb-1" />}
                     <b className="kanit font-medium block text-[15px]">{t.vehicle[k].name.replace(" ที่นั่ง", "").replace(/ · \d+ seats$/, "")}</b>
                     <small className="text-ink-soft text-[12.5px] block leading-snug">{f.s1.seatsLug(VEHICLES[k].seats, VEHICLES[k].luggage)}</small>
                   </button>

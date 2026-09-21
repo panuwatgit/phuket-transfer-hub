@@ -92,3 +92,13 @@ export const REVIEWS: { name: string; where: string; text: { th: string; en: str
   { name: "บ.สยามเทค", where: "สัมมนา 18 คน · 3 วัน กระบี่–ตรัง", stars: 5, sample: true, text: { th: "ใช้รถตู้ 2 คัน 3 วัน จัดตารางให้ครบ วางบิลได้ สะดวกกับฝ่ายจัดซื้อมาก", en: "Two vans for three days, schedule handled end to end, invoiced — made it easy for our procurement team." } },
   { name: "Sarah M.", where: "Airport → Kata · late flight", stars: 5, sample: true, text: { th: "เที่ยวบินดีเลย์ชั่วโมงกว่า คนขับก็ยังรออยู่พร้อมป้ายชื่อ ประทับใจมาก", en: "Our flight was over an hour late and the driver was still there with our name on a sign. Brilliant." } },
 ];
+
+/** รูปรถจริงต่อประเภท — รูปแรก = รูปหน้าปก (ไม่มี = ใช้ภาพวาด) วางไฟล์ใน public/vehicles/<type>/ */
+export const VEHICLE_PHOTOS: Partial<Record<VehicleType, { src: string; alt: { th: string; en: string }; w: number; h: number }[]>> = {
+  VAN_VIP8: [
+    { src: "/vehicles/vip8/exterior.jpg", alt: { th: "รถตู้ VIP 8 ที่นั่ง Toyota Commuter สีเงิน", en: "VIP 8-seat Toyota Commuter van, silver" }, w: 800, h: 533 },
+    { src: "/vehicles/vip8/interior-1.jpg", alt: { th: "ภายใน เบาะหนังปรับเอน 8 ที่นั่ง พร้อมน้ำดื่ม", en: "Interior: 8 reclining leather seats with drinking water" }, w: 600, h: 800 },
+    { src: "/vehicles/vip8/interior-2.jpg", alt: { th: "เบาะกัปตันซีท ที่วางแขน ที่วางแก้ว", en: "Captain seats with armrests and cup holders" }, w: 600, h: 800 },
+    { src: "/vehicles/vip8/interior-3.jpg", alt: { th: "เพดานไฟดาว ไฟแอมเบียนท์ ทางเดินกลาง", en: "Starlight ceiling, ambient lighting, centre aisle" }, w: 600, h: 800 },
+  ],
+};

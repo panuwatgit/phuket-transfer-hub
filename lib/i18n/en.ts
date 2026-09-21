@@ -16,8 +16,8 @@ export const en: Dict = {
   quick: { vehicle: "Vehicle", to: "Where to?", toPh: "e.g. Phuket Airport → Patong", date: "Travel date", pax: "Passengers", go: "Get a quote →" },
   vehicle: {
     kicker: "Vehicles", title: "Pick the car, we'll find it", sub: "Every car comes with a driver, background- and condition-checked. Seats include the front seat, excluding the driver.",
-    seats: "seats", luggage: "large bags", pick: "Choose this",
-    VAN_VIP8: { name: "VIP Van · 8 seats", short: "VIP 8", tagline: "Families · small groups, extra legroom", badge: "Popular" },
+    seats: "seats", luggage: "large bags", pick: "Choose this", photos: (n) => `📷 ${n} photos`,
+    VAN_VIP8: { name: "VIP Van · 8 seats", short: "VIP 8", tagline: "Reclining leather · starlight ceiling · water", badge: "Popular" },
     VAN_VIP10: { name: "VIP Van · 10 seats", short: "VIP 10", tagline: "Tour groups · companies · seminars", badge: "Groups" },
     SUV: { name: "SUV · 5 seats", short: "SUV", tagline: "Small families · premium travellers", badge: "Premium" },
     SEDAN: { name: "Sedan · 4 seats", short: "Sedan", tagline: "Airport transfers for 1–3, best value", badge: "Budget" },
