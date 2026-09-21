@@ -126,6 +126,7 @@ export const en: Dict = {
       company: "Company", companyOpt: "(optional — invoice terms available)", companyPh: "Company name",
       note: "Notes", noteOpt: "(children, elderly, stops on the way)", notePh: "Anything we should know",
       payThis: "This booking:", refund: "100% refund if we can't find a car",
+      lineConnect: "Connect LINE to get the summary and quote in chat", lineConnectBtn: "💬 Connect LINE", lineConnected: (n) => `LINE connected: ${n}`, lineFriendNo: "You haven't added our OA yet — connect again and choose “Add friend” to receive messages", lineUnlink: "Unlink", lineWhy: "Optional — if you skip this we'll reach you by phone/WhatsApp", lineErr: "LINE connection failed — try again or skip",
     },
     back: "← Back", next: "Next →", submit: "Send request ✓", sending: "Sending…",
     summary: { title: "Your request", live: "live", labels: ["Car", "Service", "Date & time", "Route", "Passengers", "Contact"], none: "Not chosen yet", payTitle: "Payment terms", payNone: "Shown once you choose a service", cars: (n) => ` × ${n} cars`, pax: (p, l) => `${p} pax · ${l} bags`, back: "back" },
@@ -137,7 +138,7 @@ export const en: Dict = {
   },
   success: {
     title: "Request received!", sub: (m, h) => `We're finding your car now and will send a quote within ${m} min (${h})`,
-    lineBtn: "💬 Send this to us on LINE", waBtn: "💬 Send this to us on WhatsApp", mailBtn: "✉️ Send this by email",
+    lineBtn: "💬 Send this to us on LINE", lineSent: "✓ Summary sent to your LINE — the quote will follow in the same chat", openLine: "💬 Open LINE chat", waBtn: "💬 Send this to us on WhatsApp", mailBtn: "✉️ Send this by email",
     preview: "Message ready to send (just tap send)",
     nextTitle: "What happens next",
     next: ["Tap the green button → WhatsApp opens with the message. Send it and we'll know it's you.", "We check availability with our partners and send the price in the chat.", "Agree the price → pay → receive the driver's name, phone and plate before travel day."],

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Nav } from "@/components/site/Nav";
 import { Confetti } from "@/components/request/Confetti";
-import { BRAND, lineOaMessageUrl, mailtoUrl, whatsappUrl } from "@/lib/config";
+import { BRAND, lineAddFriendUrl, lineOaMessageUrl, mailtoUrl, whatsappUrl } from "@/lib/config";
 import { getDict, href, isLang, type Lang } from "@/lib/i18n";
 import { customerMessage } from "@/lib/request-view";
 
@@ -21,7 +21,8 @@ export default async function SuccessPage({ params }: PageProps<"/[lang]/request
   if (!r) notFound();
   const text = customerMessage(r, lang);
   // ไทย → LINE เป็นหลัก · อังกฤษ → WhatsApp เป็นหลัก · อีเมลเป็นทางเลือกทั้งคู่
-  const primary = lang === "en" ? { href: whatsappUrl(text), label: t.success.waBtn } : { href: lineOaMessageUrl(text), label: t.success.lineBtn };
+  const linked = !!r.lineUserId;
+  const primary = lang === "en" ? { href: whatsappUrl(text), label: t.success.waBtn } : linked ? { href: lineAddFriendUrl(), label: t.success.openLine } : { href: lineOaMessageUrl(text), label: t.success.lineBtn };
   const secondary = lang === "en" ? { href: mailtoUrl(t.success.mailSubject(r.code), text), label: t.success.mailBtn } : { href: whatsappUrl(text), label: t.success.waBtn };
 
   return (
@@ -35,6 +36,7 @@ export default async function SuccessPage({ params }: PageProps<"/[lang]/request
           <div className="inline-block kanit font-semibold text-[34px] tracking-wide text-coral bg-coral-wash px-5 py-2 rounded-[14px] my-3.5">{r.code}</div>
           <p className="text-ink-soft max-w-[520px] mx-auto">{t.success.sub(BRAND.replyMinutes, t.hoursText)}</p>
 
+          {linked && lang === "th" && <div className="mt-5 inline-block bg-[#E5F9EC] text-[#06A047] font-medium px-4 py-2 rounded-xl">{t.success.lineSent}</div>}
           <div className="mt-6 flex flex-col items-center gap-2.5">
             <a className="btn btn-line !text-lg !px-7 !py-[18px]" href={primary.href} target="_blank" rel="noopener">{primary.label}</a>
             <a className="btn btn-ghost btn-sm !rounded-full" href={secondary.href} target="_blank" rel="noopener">{secondary.label}</a>

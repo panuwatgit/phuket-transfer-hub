@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { ServiceType, VehicleType } from "@prisma/client";
 import { CHARTER, PROVINCES, SERVICE_ORDER, VEHICLES, VEHICLE_ORDER, VEHICLE_IMAGE, defaultPaymentTerm, isCharter } from "@/lib/config";
@@ -12,7 +12,8 @@ import { createRequest } from "@/app/request/actions";
 import type { RequestInput } from "@/lib/validation";
 import type { ContactChannel } from "@prisma/client";
 
-type Prefill = { type?: string; to?: string; date?: string; pax?: string };
+type Prefill = { type?: string; to?: string; date?: string; pax?: string; line?: string };
+export type LineInfo = { displayName: string; friend: boolean } | null;
 
 const PROVINCE_EN: Record<string, string> = { "ภูเก็ต": "Phuket", "พังงา": "Phang Nga", "กระบี่": "Krabi", "สุราษฎร์ธานี": "Surat Thani", "ตรัง": "Trang", "นครศรีธรรมราช": "Nakhon Si Thammarat", "สงขลา": "Songkhla (Hat Yai)", "สตูล": "Satun", "พัทลุง": "Phatthalung", "ระนอง": "Ranong", "ชุมพร": "Chumphon", "ปัตตานี": "Pattani", "ยะลา": "Yala", "นราธิวาส": "Narathiwat" };
 
@@ -25,7 +26,7 @@ type State = {
   name: string; phone: string; chan: ContactChannel; lineId: string; email: string; company: string; note: string; website: string;
 };
 
-export function RequestForm({ lang, prefill }: { lang: Lang; prefill: Prefill }) {
+export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; prefill: Prefill; line: LineInfo; lineEnabled: boolean }) {
   const t = getDict(lang);
   const f = t.form;
   const router = useRouter();
@@ -41,6 +42,24 @@ export function RequestForm({ lang, prefill }: { lang: Lang; prefill: Prefill })
   });
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // กลับมาจาก LINE Login → กู้ค่าที่กรอกไว้ + ไปขั้น 3
+  useEffect(() => {
+    if (!prefill.line) return;
+    let saved: string | null = null;
+    try { saved = sessionStorage.getItem("pth-form"); sessionStorage.removeItem("pth-form"); } catch { /* ignore */ }
+    const lineErr = prefill.line === "error" ? f.s3.lineErr : null;
+    // อัปเดตหลัง mount (ค่ามาจาก sessionStorage ซึ่งเป็น external store)
+    queueMicrotask(() => {
+      if (saved) { try { const data = JSON.parse(saved) as Partial<State>; setS((p) => ({ ...p, ...data })); setStep(3); } catch { /* ignore */ } }
+      if (lineErr) setErrors({ line: lineErr });
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const connectLine = () => {
+    try { sessionStorage.setItem("pth-form", JSON.stringify(s)); } catch { /* ignore */ }
+    const ret = href(lang, "/request");
+    window.location.assign(new URL(`/api/line/login?lang=${lang}&return=${encodeURIComponent(ret)}`, window.location.origin).toString());
+  };
   const [pending, start] = useTransition();
   const set = <K extends keyof State>(k: K, v: State[K]) => { setS((p) => ({ ...p, [k]: v })); setErrors((e) => { const rest = { ...e }; delete rest[k as string]; return rest; }); };
 
@@ -257,6 +276,23 @@ export function RequestForm({ lang, prefill }: { lang: Lang; prefill: Prefill })
               <Field label={f.s3.note} opt={f.s3.noteOpt}><textarea value={s.note} onChange={(e) => set("note", e.target.value)} placeholder={f.s3.notePh} /></Field>
               {/* honeypot */}
               <input className="hidden" tabIndex={-1} autoComplete="off" value={s.website} onChange={(e) => set("website", e.target.value)} name="website" aria-hidden />
+              {lineEnabled && lang === "th" && (
+                <div className={`rounded-xl border p-3.5 mb-4 flex items-center gap-3 flex-wrap ${line ? "bg-[#E5F9EC] border-[#06C755]/40" : "bg-cream border-line"}`}>
+                  {line ? (
+                    <>
+                      <span className="text-[#06A047] font-medium">✓ {f.s3.lineConnected(line.displayName)}</span>
+                      {!line.friend && <span className="text-[13px] text-coral-deep basis-full">{f.s3.lineFriendNo}</span>}
+                      <a className="ml-auto text-[13px] text-ink-faint underline" href={`/api/line/logout?return=${encodeURIComponent(href(lang, "/request"))}`}>{f.s3.lineUnlink}</a>
+                    </>
+                  ) : (
+                    <>
+                      <div className="min-w-0"><b className="kanit font-medium block">{f.s3.lineConnect}</b><small className="text-ink-soft">{f.s3.lineWhy}</small></div>
+                      <button type="button" className="btn btn-line btn-sm ml-auto !rounded-full" onClick={connectLine}>{f.s3.lineConnectBtn}</button>
+                    </>
+                  )}
+                  {errors.line && <div className="emsg basis-full">{errors.line}</div>}
+                </div>
+              )}
               {payTerm && <div className="info">💳 <span><b>{f.s3.payThis} {f.pay[payTerm].name}</b><br />{f.pay[payTerm].desc} · {f.s3.refund}</span></div>}
               {errors.form && <div className="emsg">{errors.form}</div>}
             </section>

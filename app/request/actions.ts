@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { requestSchema, type RequestInput } from "@/lib/validation";
 import { nextRequestCode } from "@/lib/request-code";
 import { defaultPaymentTerm, isCharter, BRAND } from "@/lib/config";
-import { notifyAdmins } from "@/lib/line";
+import { notifyAdmins, pushToUser } from "@/lib/line";
+import { getLineProfile } from "@/lib/line-login";
 import { adminNotifyText, customerMessage } from "@/lib/request-view";
 import { sendEmail } from "@/lib/email";
 import { getDict } from "@/lib/i18n";
@@ -28,6 +29,7 @@ export async function createRequest(input: RequestInput): Promise<CreateResult> 
   if (d.website) return { ok: true, code: "PTH-0000-0000" }; // honeypot: pretend success
 
   const charter = isCharter(d.serviceType);
+  const lp = await getLineProfile(); // เชื่อม LINE ไว้ในฟอร์ม → รู้ userId ตั้งแต่ตอนส่ง
   const created = await prisma.$transaction(async (tx) => {
     const code = await nextRequestCode(tx);
     const r = await tx.bookingRequest.create({
@@ -59,7 +61,9 @@ export async function createRequest(input: RequestInput): Promise<CreateResult> 
         contactChannel: d.contactChannel,
         customerNote: d.customerNote || null,
         paymentTerm: d.company ? "CREDIT" : defaultPaymentTerm(d.serviceType, d.dropoffProvince),
-        statusLogs: { create: { toStatus: "NEW", note: "ลูกค้าส่งฟอร์ม", actor: "customer" } },
+        lineUserId: lp?.friend ? lp.userId : null,
+        lineLinkedAt: lp?.friend ? new Date() : null,
+        statusLogs: { create: [{ toStatus: "NEW", note: "ลูกค้าส่งฟอร์ม", actor: "customer" }, ...(lp?.friend ? [{ toStatus: "NEW" as const, note: `เชื่อม LINE ตอนกรอกฟอร์ม (${lp.displayName})`, actor: "customer" }] : [])] },
       },
     });
     return r;
@@ -67,10 +71,13 @@ export async function createRequest(input: RequestInput): Promise<CreateResult> 
 
   // แจ้งเตือนแอดมิน (LINE + อีเมลกลาง) และยืนยันลูกค้าทางอีเมลถ้าให้มา — ไม่ให้ล้มถ้าส่งไม่ได้
   const adminText = adminNotifyText(created, `${BRAND.siteUrl}/admin/requests/${created.id}`);
+  const dict = getDict(d.lang);
   await Promise.all([
     notifyAdmins(adminText),
+    // ลูกค้าเชื่อม LINE + เป็นเพื่อน OA แล้ว → ส่งสรุปเข้าแชทเขาทันที (นับโควตา push)
+    lp?.friend ? pushToUser(lp.userId, `${dict.success.sub(BRAND.replyMinutes, dict.hoursText)}\n\n${customerMessage(created)}`) : Promise.resolve(false),
     sendEmail(BRAND.email, `ขอราคาใหม่ #${created.code}`, adminText),
-    created.email ? sendEmail(created.email, getDict(d.lang).success.mailSubject(created.code), `${getDict(d.lang).success.sub(BRAND.replyMinutes, getDict(d.lang).hoursText)}\n\n${customerMessage(created)}`) : Promise.resolve(false),
+    created.email ? sendEmail(created.email, dict.success.mailSubject(created.code), `${dict.success.sub(BRAND.replyMinutes, dict.hoursText)}\n\n${customerMessage(created)}`) : Promise.resolve(false),
   ]);
 
   return { ok: true, code: created.code };

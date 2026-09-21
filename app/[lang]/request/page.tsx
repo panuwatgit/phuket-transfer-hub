@@ -3,6 +3,7 @@ import { Nav } from "@/components/site/Nav";
 import { RequestForm } from "@/components/request/RequestForm";
 import { BRAND } from "@/lib/config";
 import { getDict, isLang, type Lang } from "@/lib/i18n";
+import { getLineProfile, loginConfigured } from "@/lib/line-login";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/request">): Promise<Metadata> {
   const { lang } = await params;
@@ -15,6 +16,7 @@ export default async function RequestPage({ params, searchParams }: PageProps<"/
   const t = getDict(lang);
   const sp = await searchParams;
   const pick = (k: string) => (typeof sp[k] === "string" ? (sp[k] as string) : undefined);
+  const lp = await getLineProfile();
   return (
     <>
       <Nav lang={lang} path="/request" links={false} />
@@ -23,7 +25,7 @@ export default async function RequestPage({ params, searchParams }: PageProps<"/
           <div><h1 className="text-[clamp(26px,3.5vw,36px)] font-semibold">{t.form.title}</h1><p className="text-ink-soft">{t.form.sub}</p></div>
           <span className="text-sm text-ink-soft">{t.form.meta(BRAND.replyMinutes)}</span>
         </div>
-        <RequestForm lang={lang} prefill={{ type: pick("type"), to: pick("to"), date: pick("date"), pax: pick("pax") }} />
+        <RequestForm lang={lang} prefill={{ type: pick("type"), to: pick("to"), date: pick("date"), pax: pick("pax"), line: pick("line") }} line={lp ? { displayName: lp.displayName, friend: lp.friend } : null} lineEnabled={loginConfigured()} />
       </main>
     </>
   );
