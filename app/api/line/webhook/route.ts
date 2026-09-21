@@ -6,7 +6,7 @@ import { BRAND } from "@/lib/config";
 type LineEvent = {
   type: string;
   replyToken?: string;
-  source?: { userId?: string };
+  source?: { type?: string; userId?: string; groupId?: string };
   message?: { type: string; text?: string };
 };
 
@@ -28,6 +28,14 @@ export async function POST(req: Request) {
   }
 
   for (const ev of events) {
+    // OA ถูกดึงเข้ากลุ่ม → log groupId ไว้ใส่ LINE_ADMIN_USER_IDS (ให้แจ้งเตือนเข้ากลุ่มทีมงานแทนแชทส่วนตัว)
+    if (ev.type === "join" && ev.source?.groupId) {
+      console.log(`[line] joined group — ใส่ค่านี้ใน LINE_ADMIN_USER_IDS: ${ev.source.groupId}`);
+      if (ev.replyToken) await replyMessage(ev.replyToken, `สวัสดีครับ ทีมงาน 🙏 กลุ่มนี้พร้อมรับแจ้งเตือนคำขอราคาแล้ว\nGroup ID: ${ev.source.groupId}`);
+      continue;
+    }
+    // ข้อความในกลุ่ม = ทีมงานคุยกัน ไม่ใช่ลูกค้า → ข้าม
+    if (ev.source?.type === "group" || ev.source?.type === "room") continue;
     if (ev.type !== "message" || ev.message?.type !== "text" || !ev.source?.userId) continue;
     const userId = ev.source.userId;
     const text = ev.message.text ?? "";
