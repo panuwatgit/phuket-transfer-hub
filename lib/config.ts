@@ -6,7 +6,7 @@ export const BRAND = {
   short: "PTH",
   slogan: "คุยง่าย ราคาถูกใจ",
   sloganFull: "คุยง่าย ราคาถูกใจ ใช้งาน Phuket Transfer Hub",
-  company: "บริษัท ______ จำกัด", // TODO ชื่อบริษัทจดทะเบียน
+  company: "", // ใส่ชื่อบริษัทเมื่อจดทะเบียนแล้ว — ว่าง = ไม่แสดง
   phone: "086-422-6141",
   whatsapp: "66864226141", // รูปแบบสากล ไม่มี + (ใช้ทำลิงก์ wa.me)
   email: "phukettransferhub@gmail.com",

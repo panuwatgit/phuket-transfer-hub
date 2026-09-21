@@ -63,7 +63,7 @@ export function Footer({ lang }: { lang: Lang }) {
   return (
     <footer className="bg-white border-t border-line py-10 pb-28 md:pb-10 text-sm text-ink-soft">
       <div className="max-w-[1140px] mx-auto px-5 flex justify-between flex-wrap gap-5">
-        <div><b className="kanit text-ink">{BRAND.name}</b><br />{BRAND.company} · {lang === "en" ? "Phuket, Thailand" : "ภูเก็ต"}<br />{t.footer.line}: {BRAND.lineOaId} · {t.footer.phone}: {BRAND.phone}<br />{t.footer.email}: <a href={`mailto:${BRAND.email}`} className="hover:text-teal-deep">{BRAND.email}</a></div>
+        <div><b className="kanit text-ink">{BRAND.name}</b><br />{BRAND.company ? `${BRAND.company} · ` : ""}{lang === "en" ? "Phuket, Thailand" : "ภูเก็ต ประเทศไทย"}<br />{t.footer.line}: {BRAND.lineOaId} · {t.footer.phone}: {BRAND.phone}<br />{t.footer.email}: <a href={`mailto:${BRAND.email}`} className="hover:text-teal-deep">{BRAND.email}</a></div>
         <div>{t.footer.hours} {t.hoursText}<br /><Link href={href(lang, "/terms")} className="underline decoration-line hover:text-teal-deep">{t.footer.terms}</Link></div>
         <div>© {new Date().getFullYear()} {BRAND.name}</div>
       </div>

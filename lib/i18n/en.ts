@@ -84,7 +84,7 @@ export const en: Dict = {
   },
   trust: {
     items: [
-      { icon: "🏢", t: "Registered business", d: "Receipt for every booking" },
+      { icon: "⚡", t: "Reply within 30 min", d: "08:00–22:00 daily, WhatsApp or phone" },
       { icon: "🛡️", t: "Vetted drivers & cars", d: "Background and vehicle checks before joining our network" },
       { icon: "🌙", t: "No night surcharge", d: "One price at any hour" },
       { icon: "💯", t: "100% refund if no car", d: "Within 24 hours" },

@@ -129,11 +129,12 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         </div>
       </section>
 
-      <section id="reviews" className="pt-[90px]">
+      {/* รีวิว — แสดงเมื่อมีรีวิวจริง (sample: false) อย่างน้อย 1 อัน */}
+      {REVIEWS.some((r) => !r.sample) && <section id="reviews" className="pt-[90px]">
         <div className="max-w-[1140px] mx-auto px-5">
           <SectionHead kicker={t.reviews.kicker} title={t.reviews.title} />
           <div className="grid md:grid-cols-3 gap-[18px]">
-            {REVIEWS.map((r, i) => (
+            {REVIEWS.filter((r) => !r.sample).map((r, i) => (
               <Reveal key={r.name} className="card p-6 !shadow-none relative" delay={i * 100}>
                 {r.sample && <span className="absolute top-3 right-3 text-[10px] uppercase tracking-wide bg-sun-wash text-[#8A6200] px-2 py-0.5 rounded-full" title={t.reviews.sample}>sample</span>}
                 <div className="text-sun tracking-wider mb-2">{"★".repeat(r.stars)}</div>
@@ -144,7 +145,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           </div>
           {BRAND.googleReviewUrl && <div className="text-center mt-6"><a className="btn btn-ghost" href={BRAND.googleReviewUrl} target="_blank" rel="noopener">{BRAND.googleRating ? `★ ${BRAND.googleRating} · ` : ""}{t.reviews.google}</a></div>}
         </div>
-      </section>
+      </section>}
 
       <section id="policy" className="py-[90px]">
         <div className="max-w-[1140px] mx-auto px-5">
