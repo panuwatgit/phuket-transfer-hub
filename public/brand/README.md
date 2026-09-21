@@ -21,3 +21,10 @@ swiftc -O -o /tmp/cutout tools/brand/cutout.swift
 /tmp/cutout input.jpg public/vehicles/<type>-cutout.png
 ```
 แล้วเพิ่มใน `VEHICLE_IMAGE` (lib/config.ts)
+
+## เบลอป้ายทะเบียน
+`tools/brand/blur-plate.swift` หาเลขทะเบียนด้วย Vision แล้ว pixelate ให้อัตโนมัติ:
+```bash
+swiftc -O -o /tmp/blur-plate tools/brand/blur-plate.swift
+/tmp/blur-plate public/vehicles/suv-cutout.png public/vehicles/suv-cutout.png
+```
