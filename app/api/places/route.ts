@@ -5,6 +5,7 @@ import { searchPlaces } from "@/lib/places";
 export type Suggestion = { label: string; sub?: string; icon: string; source: "local" | "google"; placeId?: string };
 
 const SOUTH_TH = { low: { latitude: 6.0, longitude: 97.3 }, high: { latitude: 11.5, longitude: 102.2 } };
+const PHUKET = { latitude: 7.9519, longitude: 98.3381 }; // ใช้เป็นจุดอ้างอิงเรียงผลลัพธ์ใกล้ภูเก็ตก่อน
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -20,14 +21,15 @@ export async function GET(req: Request) {
       const res = await fetch("https://places.googleapis.com/v1/places:autocomplete", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Goog-Api-Key": key },
-        body: JSON.stringify({ input: q, languageCode: lang, regionCode: "TH", locationRestriction: { rectangle: SOUTH_TH }, includedRegionCodes: ["th"] }),
+        body: JSON.stringify({ input: q, languageCode: lang, regionCode: "TH", locationRestriction: { rectangle: SOUTH_TH }, includedRegionCodes: ["th"], origin: PHUKET }),
         next: { revalidate: 0 },
       });
       if (res.ok) {
-        const data = (await res.json()) as { suggestions?: { placePrediction?: { placeId: string; structuredFormat?: { mainText?: { text: string }; secondaryText?: { text: string } }; text?: { text: string } } }[] };
+        const data = (await res.json()) as { suggestions?: { placePrediction?: { placeId: string; distanceMeters?: number; structuredFormat?: { mainText?: { text: string }; secondaryText?: { text: string } }; text?: { text: string } } }[] };
         google = (data.suggestions ?? [])
           .map((s) => s.placePrediction)
           .filter((p): p is NonNullable<typeof p> => !!p)
+          .sort((a, b) => (a.distanceMeters ?? 1e9) - (b.distanceMeters ?? 1e9)) // ใกล้ภูเก็ตก่อน
           .slice(0, 6)
           .map((p) => ({ label: p.structuredFormat?.mainText?.text ?? p.text?.text ?? "", sub: p.structuredFormat?.secondaryText?.text?.replace(/, ประเทศไทย$|, Thailand$/, ""), icon: "🏨", source: "google" as const, placeId: p.placeId }));
       } else console.error("[places] google", res.status, await res.text());
