@@ -8,7 +8,7 @@ export default async function RequestPage({ params }: PageProps<"/admin/requests
   if (!Number.isInteger(rid)) notFound();
   const r = await prisma.bookingRequest.findUnique({
     where: { id: rid },
-    include: { vehicle: { include: { partner: true } }, statusLogs: { orderBy: { createdAt: "asc" } } },
+    include: { vehicle: { include: { partner: true } }, statusLogs: { orderBy: { createdAt: "asc" } }, documents: { orderBy: { issuedAt: "desc" } } },
   });
   if (!r) notFound();
   const candidates = await prisma.vehicle.findMany({

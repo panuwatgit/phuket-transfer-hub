@@ -211,3 +211,67 @@ export async function sendDriverInfo(id: number) {
   refresh(id);
   return { ok: true as const, sent, text };
 }
+
+// ── documents: ใบเสนอราคา / ใบเสร็จ ───────────────────────────────────────
+import type { DocumentType } from "@prisma/client";
+import { buildItems, docLang, jobTotal, newToken, nextDocNumber, DOC_LABEL } from "@/lib/documents";
+
+export async function issueDocument(
+  requestId: number,
+  type: DocumentType,
+  opts: { amountPaid?: number; paymentMethod?: string; showTaxId?: boolean; customerTaxId?: string; customerAddress?: string; note?: string; validDays?: number } = {},
+) {
+  await requireAdmin();
+  const r = await prisma.bookingRequest.findUniqueOrThrow({ where: { id: requestId }, include: { documents: { where: { type: "RECEIPT", voidedAt: null } } } });
+  if (!r.sellPrice) return { ok: false as const, error: "ตั้งราคาขายก่อนออกเอกสาร" };
+  const items = buildItems(r);
+  const total = jobTotal(r);
+  const paidBefore = r.documents.reduce((a, d) => a + d.amountPaid, 0);
+  const amountPaid = type === "RECEIPT" ? Math.max(0, Math.round(opts.amountPaid ?? Math.max(0, r.amountPaid - paidBefore))) : 0;
+  if (type === "RECEIPT" && amountPaid <= 0) return { ok: false as const, error: "ใส่ยอดที่รับครั้งนี้" };
+
+  const doc = await prisma.$transaction(async (tx) => {
+    const number = await nextDocNumber(tx, type);
+    return tx.document.create({
+      data: {
+        number, type, token: newToken(), lang: docLang(r), requestId,
+        customerName: r.customerName, customerCompany: r.company, customerPhone: r.phone,
+        customerTaxId: opts.customerTaxId?.trim() || null, customerAddress: opts.customerAddress?.trim() || null,
+        items, total,
+        amountPaid, paidBefore: type === "RECEIPT" ? paidBefore : 0, balance: type === "RECEIPT" ? Math.max(0, total - paidBefore - amountPaid) : total,
+        paymentMethod: type === "RECEIPT" ? opts.paymentMethod || "TRANSFER" : null,
+        paymentTerm: type === "QUOTE" ? r.paymentTerm : null,
+        validDays: type === "QUOTE" ? (opts.validDays ?? 7) : null,
+        showTaxId: !!opts.showTaxId, note: opts.note?.trim() || null,
+      },
+    });
+  });
+  // ใบเสร็จ: sync ยอดรับรวมกลับไปที่ request ถ้ามากกว่าที่บันทึกไว้
+  if (type === "RECEIPT" && paidBefore + amountPaid > r.amountPaid) {
+    await prisma.bookingRequest.update({ where: { id: requestId }, data: { amountPaid: paidBefore + amountPaid, paidAt: r.paidAt ?? new Date() } });
+  }
+  await prisma.statusLog.create({ data: { requestId, fromStatus: r.status, toStatus: r.status, note: `ออก${DOC_LABEL[type].short} ${doc.number}${type === "RECEIPT" ? ` ยอด ${baht(amountPaid)}` : ""}` } });
+  refresh(requestId);
+  return { ok: true as const, id: doc.id, number: doc.number, url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3100"}/doc/${doc.token}` };
+}
+
+export async function voidDocument(id: number) {
+  await requireAdmin();
+  const d = await prisma.document.findUniqueOrThrow({ where: { id } });
+  await prisma.document.update({ where: { id }, data: { voidedAt: new Date() } });
+  await prisma.statusLog.create({ data: { requestId: d.requestId, toStatus: (await prisma.bookingRequest.findUniqueOrThrow({ where: { id: d.requestId } })).status, note: `ยกเลิกเอกสาร ${d.number}` } });
+  refresh(d.requestId);
+}
+
+/** ส่งลิงก์เอกสารเข้าแชท LINE ลูกค้า (ถ้าผูกแล้ว) — ไม่งั้นคืนข้อความให้คัดลอก */
+export async function sendDocumentLink(id: number) {
+  await requireAdmin();
+  const d = await prisma.document.findUniqueOrThrow({ where: { id }, include: { request: true } });
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3100"}/doc/${d.token}`;
+  const en = d.lang === "en";
+  const text = en
+    ? `${DOC_LABEL[d.type].en} ${d.number} for request #${d.request.code}\n${url}\nTap to view or save as PDF. — Phuket Transfer Hub`
+    : `${DOC_LABEL[d.type].th} ${d.number} สำหรับคำขอ #${d.request.code}\n${url}\nกดเปิดดูหรือบันทึกเป็น PDF ได้เลยครับ — Phuket Transfer Hub`;
+  const sent = d.request.lineUserId ? await pushToUser(d.request.lineUserId, text) : false;
+  return { ok: true as const, sent, text, url };
+}

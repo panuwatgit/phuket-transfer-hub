@@ -49,6 +49,11 @@ enum AirportDirection {
   TO_AIRPORT
 }
 
+enum DocumentType {
+  QUOTE
+  RECEIPT
+}
+
 // ── partners & vehicles ────────────────────────────────────────────────────
 
 model Partner {
@@ -144,6 +149,7 @@ model BookingRequest {
   cancelReason String?
 
   statusLogs StatusLog[]
+  documents  Document[]
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 
@@ -169,4 +175,37 @@ model StatusLog {
 model Counter {
   key   String @id
   value Int    @default(0)
+}
+
+// ใบเสนอราคา / ใบเสร็จรับเงิน — snapshot ณ วันออก (แก้ request ทีหลังไม่กระทบเอกสารที่ออกแล้ว)
+model Document {
+  id        Int            @id @default(autoincrement())
+  number    String         @unique // QT-2026-0001 / RC-2026-0001
+  type      DocumentType
+  token     String         @unique // ลิงก์สาธารณะ /doc/<token>
+  lang      String         @default("th")
+  requestId Int
+  request   BookingRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  customerName    String
+  customerCompany String?
+  customerPhone   String
+  customerTaxId   String?
+  customerAddress String?
+
+  items         Json // [{ desc, qty, unit, unitPrice, amount }]
+  total         Int
+  amountPaid    Int      @default(0) // ใบเสร็จ: ยอดรับครั้งนี้
+  paidBefore    Int      @default(0) // ใบเสร็จ: รับไปแล้วก่อนหน้า
+  balance       Int      @default(0)
+  paymentMethod String?
+  paymentTerm   String? // ใบเสนอราคา: เงื่อนไขชำระ
+  validDays     Int? // ใบเสนอราคา: ยืนราคา (วัน)
+  showTaxId     Boolean  @default(false)
+  note          String?
+
+  issuedAt DateTime  @default(now())
+  voidedAt DateTime?
+
+  @@index([requestId, type])
 }

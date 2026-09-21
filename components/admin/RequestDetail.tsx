@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import type { BookingRequest, Partner, PaymentTerm, StatusLog, Vehicle } from "@prisma/client";
+import type { BookingRequest, Document, Partner, PaymentTerm, StatusLog, Vehicle } from "@prisma/client";
+import { DocumentsPanel } from "./DocumentsPanel";
 import { NEXT_STATUS, PAYMENT_TERMS, SERVICES, STATUSES, VEHICLES, isCharter } from "@/lib/config";
 import { ago, baht, thDate } from "@/lib/format";
 import { routeText } from "@/lib/request-view";
@@ -10,7 +11,7 @@ import { copy, toast } from "./Toast";
 
 const CHANNEL: Record<string, string> = { LINE: "💬 LINE", PHONE: "📞 โทร", WHATSAPP: "💬 WhatsApp", EMAIL: "✉️ อีเมล" };
 
-type Req = BookingRequest & { vehicle: (Vehicle & { partner: Partner }) | null; statusLogs: StatusLog[] };
+type Req = BookingRequest & { vehicle: (Vehicle & { partner: Partner }) | null; statusLogs: StatusLog[]; documents: Document[] };
 type Cand = Vehicle & { partner: Partner };
 
 export function RequestDetail({ r, candidates, now }: { r: Req; candidates: Cand[]; now: Date }) {
@@ -162,6 +163,9 @@ export function RequestDetail({ r, candidates, now }: { r: Req; candidates: Cand
           <div className="in in-sm"><textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder="เช่น ลูกค้าขอรถสีขาว / พาร์ทเนอร์ขอมัดจำ 500" /></div>
           <button className="btn btn-ghost btn-sm mt-2.5" disabled={pending || note === (r.adminNote ?? "")} onClick={() => go(() => saveAdminNote(r.id, note), "บันทึกแล้ว ✓")}>บันทึก</button>
         </section>
+
+        {/* เอกสาร */}
+        <DocumentsPanel requestId={r.id} documents={r.documents} total={total} amountPaid={r.amountPaid} hasPrice={!!r.sellPrice} isCompany={!!r.company} lang={r.lang} phone={r.phone} lineLinked={!!r.lineUserId} />
 
         {/* ไทม์ไลน์ */}
         <section className="sec md:col-span-2">

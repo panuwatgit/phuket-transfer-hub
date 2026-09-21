@@ -189,3 +189,10 @@ table.tbl { width: 100%; border-collapse: collapse; background: #fff; border-rad
 table.tbl th { text-align: left; font-family: var(--font-display); font-weight: 500; font-size: 13px; color: var(--ink-soft); padding: 12px 14px; background: var(--cream); border-bottom: 1px solid var(--line); }
 table.tbl td { padding: 11px 14px; border-bottom: 1px solid var(--line); font-size: 13.5px; vertical-align: middle; }
 table.tbl tr:hover td { background: #fffdf9; }
+
+/* ── print (ใบเสร็จ / ใบเสนอราคา) ─────────────────────────────────────── */
+@media print {
+  @page { size: A4; margin: 14mm; }
+  body { background: #fff !important; }
+  .doc { box-shadow: none !important; }
+}

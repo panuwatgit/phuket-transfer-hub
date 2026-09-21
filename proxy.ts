@@ -11,5 +11,5 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   // เฉพาะหน้า public — ข้าม admin, api, ไฟล์ static
-  matcher: ["/((?!admin|api|_next|.*\\..*).*)"],
+  matcher: ["/((?!admin|api|doc|_next|.*\\..*).*)"],
 };
