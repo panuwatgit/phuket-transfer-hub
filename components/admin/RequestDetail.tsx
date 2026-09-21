@@ -104,13 +104,15 @@ export function RequestDetail({ r, candidates, now, partners }: { r: Req; candid
           {r.vehicle && (
             <div className="mt-3 flex items-center gap-2 flex-wrap text-[13px] text-ink-soft">
               <span>ติดต่อพาร์ทเนอร์: <a className="text-teal-deep font-medium" href={`tel:${r.vehicle.partner.phone}`}>📞 {r.vehicle.partner.phone}</a>{r.vehicle.partner.lineId && <> · 💬 {r.vehicle.partner.lineId}</>}</span>
-              <button className="btn btn-sm !bg-[#E5F9EC] !text-[#06A047] ml-auto" disabled={pending} onClick={() => go(async () => {
+              {(() => { const ok = r.status === "CONFIRMED" && (r.amountPaid > 0 || r.paymentTerm === "CREDIT"); return (
+              <button className={`btn btn-sm ml-auto ${ok ? "!bg-[#E5F9EC] !text-[#06A047]" : "btn-ghost"}`} disabled={pending || !ok} title={ok ? "" : "ส่งได้เมื่อสถานะ 'ยืนยันแล้ว' และรับชำระแล้ว (นโยบาย: ไม่ส่งข้อมูลคนขับก่อนชำระ)"} onClick={() => go(async () => {
                 const res = await sendDriverInfo(r.id);
                 if (!res.ok) throw new Error(res.error);
                 if (res.sent) { toast("ส่งข้อมูลคนขับเข้าแชท LINE แล้ว", true); return; }
                 await copy(res.text, "คัดลอกข้อความข้อมูลคนขับแล้ว");
                 if (r.lang === "en" || r.contactChannel === "WHATSAPP") window.open(`https://wa.me/${r.phone.replace(/[^\d]/g, "").replace(/^0/, "66")}?text=${encodeURIComponent(res.text)}`, "_blank");
-              })}>🚐 ส่งข้อมูลคนขับให้ลูกค้า{r.lineUserId ? " (LINE)" : r.lang === "en" || r.contactChannel === "WHATSAPP" ? " (WhatsApp)" : " (คัดลอก)"}</button>
+              })}>🚐 ส่งข้อมูลคนขับให้ลูกค้า{ok ? (r.lineUserId ? " (LINE)" : r.lang === "en" || r.contactChannel === "WHATSAPP" ? " (WhatsApp)" : " (คัดลอก)") : " 🔒 หลังยืนยัน+ชำระ"}</button>
+              ); })()}
             </div>
           )}
         </section>

@@ -178,6 +178,8 @@ export async function sendDriverInfo(id: number) {
   await requireAdmin();
   const r = await prisma.bookingRequest.findUniqueOrThrow({ where: { id }, include: { vehicle: { include: { partner: true } } } });
   if (!r.vehicle) return { ok: false as const, error: "ยังไม่ได้จัดรถ" };
+  // นโยบาย: ไม่ส่งข้อมูลคนขับก่อนลูกค้ายืนยันและชำระ
+  if (r.status !== "CONFIRMED" || (r.amountPaid <= 0 && r.paymentTerm !== "CREDIT")) return { ok: false as const, error: "ส่งได้เมื่อสถานะ 'ยืนยันแล้ว' และรับชำระแล้ว" };
   const v = r.vehicle, p = v.partner;
   const en = r.lang === "en";
   const d = getDict(en ? "en" : "th");
