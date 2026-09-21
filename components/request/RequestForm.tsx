@@ -7,6 +7,7 @@ import Image from "next/image";
 import { addHours } from "@/lib/format";
 import { fmtDate, getDict, href, type Lang } from "@/lib/i18n";
 import { VehicleArt } from "@/components/ui/VehicleArt";
+import { PlaceInput } from "./PlaceInput";
 import { createRequest } from "@/app/request/actions";
 import type { RequestInput } from "@/lib/validation";
 import type { ContactChannel } from "@prisma/client";
@@ -184,20 +185,20 @@ export function RequestForm({ lang, prefill }: { lang: Lang; prefill: Prefill })
                       <div className="mb-5"><span className="lbl">{f.s2.direction}</span>
                         <div className="seg"><button type="button" className={s.direction === "FROM_AIRPORT" ? "on" : ""} onClick={() => set("direction", "FROM_AIRPORT")}>{f.s2.fromAirport}</button><button type="button" className={s.direction === "TO_AIRPORT" ? "on" : ""} onClick={() => set("direction", "TO_AIRPORT")}>{f.s2.toAirport}</button></div>
                       </div>
-                      <Field label={f.s2.apPlace} err={errors.apPlace}><span>🏨</span><input value={s.apPlace} onChange={(e) => set("apPlace", e.target.value)} placeholder={f.s2.apPlacePh} /></Field>
+                      <PField label={f.s2.apPlace} err={errors.apPlace}><PlaceInput icon="🏨" lang={lang} value={s.apPlace} onChange={(v) => set("apPlace", v)} placeholder={f.s2.apPlacePh} /></PField>
                       <Field label={f.s2.flight} opt={f.s2.flightOpt}><span>✈️</span><input value={s.flight} onChange={(e) => set("flight", e.target.value)} placeholder={f.s2.flightPh} /></Field>
                     </>
                   )}
                   {s.serviceType === "POINT_TO_POINT" && (
                     <>
-                      <Field label={f.s2.p2pFrom} err={errors.p2pFrom}><span>📍</span><input value={s.p2pFrom} onChange={(e) => set("p2pFrom", e.target.value)} placeholder={f.s2.p2pFromPh} /></Field>
+                      <PField label={f.s2.p2pFrom} err={errors.p2pFrom}><PlaceInput icon="📍" lang={lang} value={s.p2pFrom} onChange={(v) => set("p2pFrom", v)} placeholder={f.s2.p2pFromPh} /></PField>
                       <div className="grid sm:grid-cols-2 gap-3.5">
-                        <Field label={f.s2.p2pTo} err={errors.p2pTo}><span>🏁</span><input value={s.p2pTo} onChange={(e) => set("p2pTo", e.target.value)} placeholder={f.s2.p2pToPh} /></Field>
+                        <PField label={f.s2.p2pTo} err={errors.p2pTo}><PlaceInput icon="🏁" lang={lang} value={s.p2pTo} onChange={(v) => set("p2pTo", v)} placeholder={f.s2.p2pToPh} /></PField>
                         <Field label={f.s2.prov}><span>🗺️</span><select value={s.prov} onChange={(e) => set("prov", e.target.value)}>{PROVINCES.map((p) => <option key={p} value={p}>{lang === "en" ? PROVINCE_EN[p] ?? p : p}</option>)}</select></Field>
                       </div>
                     </>
                   )}
-                  {charter && <Field label={f.s2.chPlace} err={errors.chPlace}><span>🏨</span><input value={s.chPlace} onChange={(e) => set("chPlace", e.target.value)} placeholder={f.s2.chPlacePh} /></Field>}
+                  {charter && <PField label={f.s2.chPlace} err={errors.chPlace}><PlaceInput icon="🏨" lang={lang} value={s.chPlace} onChange={(v) => set("chPlace", v)} placeholder={f.s2.chPlacePh} /></PField>}
 
                   <div className="grid sm:grid-cols-2 gap-3.5">
                     <Field label={s.serviceType === "MULTI_DAY" ? f.s2.dateStart : f.s2.date} err={errors.date}><span>📅</span><input type="date" min={today} value={s.date} onChange={(e) => set("date", e.target.value)} /></Field>
@@ -282,6 +283,16 @@ export function RequestForm({ lang, prefill }: { lang: Lang; prefill: Prefill })
         </aside>
       </div>
     </>
+  );
+}
+
+function PField({ label, err, children }: { label: string; err?: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-5">
+      <span className="lbl">{label}</span>
+      <div className={err ? "[&_.in]:border-coral [&_.in]:bg-coral-wash" : ""}>{children}</div>
+      {err && <div className="emsg">{err}</div>}
+    </div>
   );
 }
 
