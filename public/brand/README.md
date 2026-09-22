@@ -30,5 +30,4 @@ swiftc -O -o /tmp/blur-plate tools/brand/blur-plate.swift
 ```
 
 ## ที่มารูปรถ
-- VIP8 / VIP10 / SUV — รถของทีมงาน (ถ่ายเอง)
-- Sedan — stock photo จาก Pexels (#11285174 โดย Yousif, Pexels License: ใช้เชิงพาณิชย์ได้ ไม่ต้องให้เครดิต) ไดคัต+เบลอป้าย — ควรแทนด้วยรถจริงเมื่อมีรูป
+- VIP8 / VIP10 / SUV / Sedan — รถของทีมงาน (ถ่ายเอง) · SUV และ Sedan เบลอป้ายทะเบียน

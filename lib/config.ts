@@ -98,7 +98,7 @@ export const VEHICLE_IMAGE: Partial<Record<VehicleType, { src: string; w: number
   VAN_VIP8: { src: "/vehicles/vip8-cutout.png", w: 447, h: 334 },
   VAN_VIP10: { src: "/vehicles/vip10-cutout.png", w: 1001, h: 876 },
   SUV: { src: "/vehicles/suv-cutout.png", w: 1001, h: 641 },
-  SEDAN: { src: "/vehicles/sedan-cutout.png", w: 1001, h: 537 }, // stock: Pexels #11285174 (Yousif) — แทนด้วยรถจริงเมื่อมีรูป
+  SEDAN: { src: "/vehicles/sedan-cutout.png", w: 1001, h: 608 },
 };
 
 /** รูปบรรยากาศจริง (หน้าแรก "บรรยากาศในรถ") — เพิ่มได้เรื่อย ๆ วางไฟล์ใน public/gallery/ */

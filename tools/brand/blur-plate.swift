@@ -21,7 +21,7 @@ var boxes: [CGRect] = []
 for o in req.results ?? [] {
   guard let top = o.topCandidates(1).first else { continue }
   let digits = top.string.filter { $0.isNumber }.count
-  if digits >= 3 && digits <= 5 {
+  if digits >= 3 && digits <= 8 { // ป้ายทะเบียนไทยมักอ่านได้ 4–7 หลัก (รวมเลขที่ OCR เพี้ยน)
     let b = o.boundingBox // normalized, origin bottom-left
     var r = CGRect(x: b.minX * W, y: b.minY * H, width: b.width * W, height: b.height * H)
     r = r.insetBy(dx: -r.width * padX, dy: -r.height * padY)
