@@ -144,6 +144,24 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
 
   return (
     <>
+      {lineEnabled && lang === "th" && (
+        <div className={`rounded-2xl border p-3.5 mb-3 flex items-center gap-3 flex-wrap ${line ? "bg-[#E5F9EC] border-[#06C755]/40" : "bg-white border-line shadow-soft"}`}>
+          {line ? (
+            <>
+              <span className="text-[#06A047] font-medium">✓ {f.s3.lineConnected(line.displayName)}</span>
+              {!line.friend && <span className="text-[13px] text-coral-deep basis-full">{f.s3.lineFriendNo}</span>}
+              <a className="ml-auto text-[13px] text-ink-faint underline" href={`/api/line/logout?return=${encodeURIComponent(href(lang, "/request"))}`}>{f.s3.lineUnlink}</a>
+            </>
+          ) : (
+            <>
+              <span className="text-2xl">💬</span>
+              <div className="min-w-0 flex-1"><b className="kanit font-medium block leading-tight">{f.s3.lineConnect}</b><small className="text-ink-soft">{f.s3.lineWhy}</small></div>
+              <button type="button" className="btn btn-line btn-sm !rounded-full" onClick={connectLine}>{f.s3.lineConnectBtn}</button>
+            </>
+          )}
+          {errors.line && <div className="emsg basis-full">{errors.line}</div>}
+        </div>
+      )}
       {/* progress */}
       <div className="grid grid-cols-3 gap-2 mb-2.5">
         {f.steps.map((label, i) => {
@@ -276,23 +294,6 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
               <Field label={f.s3.note} opt={f.s3.noteOpt}><textarea value={s.note} onChange={(e) => set("note", e.target.value)} placeholder={f.s3.notePh} /></Field>
               {/* honeypot */}
               <input className="hidden" tabIndex={-1} autoComplete="off" value={s.website} onChange={(e) => set("website", e.target.value)} name="website" aria-hidden />
-              {lineEnabled && lang === "th" && (
-                <div className={`rounded-xl border p-3.5 mb-4 flex items-center gap-3 flex-wrap ${line ? "bg-[#E5F9EC] border-[#06C755]/40" : "bg-cream border-line"}`}>
-                  {line ? (
-                    <>
-                      <span className="text-[#06A047] font-medium">✓ {f.s3.lineConnected(line.displayName)}</span>
-                      {!line.friend && <span className="text-[13px] text-coral-deep basis-full">{f.s3.lineFriendNo}</span>}
-                      <a className="ml-auto text-[13px] text-ink-faint underline" href={`/api/line/logout?return=${encodeURIComponent(href(lang, "/request"))}`}>{f.s3.lineUnlink}</a>
-                    </>
-                  ) : (
-                    <>
-                      <div className="min-w-0"><b className="kanit font-medium block">{f.s3.lineConnect}</b><small className="text-ink-soft">{f.s3.lineWhy}</small></div>
-                      <button type="button" className="btn btn-line btn-sm ml-auto !rounded-full" onClick={connectLine}>{f.s3.lineConnectBtn}</button>
-                    </>
-                  )}
-                  {errors.line && <div className="emsg basis-full">{errors.line}</div>}
-                </div>
-              )}
               {payTerm && <div className="info">💳 <span><b>{f.s3.payThis} {f.pay[payTerm].name}</b><br />{f.pay[payTerm].desc} · {f.s3.refund}</span></div>}
               {errors.form && <div className="emsg">{errors.form}</div>}
             </section>
