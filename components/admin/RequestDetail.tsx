@@ -7,7 +7,7 @@ import { DocumentsPanel } from "./DocumentsPanel";
 import { NEXT_STATUS, PAYMENT_TERMS, SERVICES, STATUSES, VEHICLES, isCharter } from "@/lib/config";
 import { ago, baht, thDate } from "@/lib/format";
 import { routeText } from "@/lib/request-view";
-import { assignVehicle, saveAdminNote, savePayment, savePricing, sendDriverInfo, sendQuoteViaLine, setStatus } from "@/app/admin/actions";
+import { assignVehicle, saveAdminNote, savePayment, savePricing, sendDriverInfo, sendPaymentDetails, sendQuoteViaLine, setStatus } from "@/app/admin/actions";
 import { copy, toast } from "./Toast";
 
 const CHANNEL: Record<string, string> = { LINE: "💬 LINE", PHONE: "📞 โทร", WHATSAPP: "💬 WhatsApp", EMAIL: "✉️ อีเมล" };
@@ -157,7 +157,19 @@ export function RequestDetail({ r, candidates, now, partners }: { r: Req; candid
           </div>
           {r.paidAt && <div className="text-xs text-ink-faint mt-1.5">รับครั้งแรก {thDate(r.paidAt)}</div>}
           <div className="text-xs text-ink-faint mt-1.5">เฟส 1 กรอกมือหลังเช็กสลิปใน LINE · เฟส 3 ต่อ PromptPay + อัปโหลดสลิป</div>
-          <button className="btn btn-teal btn-sm mt-2.5" disabled={pending} onClick={() => go(() => savePayment(r.id, { paymentTerm: term, amountPaid: paid }), "บันทึกการชำระแล้ว ✓")}>บันทึกการชำระ</button>
+          <div className="flex gap-2 mt-2.5 flex-wrap">
+            <button className="btn btn-teal btn-sm" disabled={pending} onClick={() => go(() => savePayment(r.id, { paymentTerm: term, amountPaid: paid }), "บันทึกการชำระแล้ว ✓")}>บันทึกการชำระ</button>
+            {r.sellPrice && term !== "CREDIT" && due > r.amountPaid && (
+              <button className="btn btn-sm !bg-[#E5F9EC] !text-[#06A047]" disabled={pending} onClick={() => go(async () => {
+                const res = await sendPaymentDetails(r.id);
+                if (!res.ok) throw new Error(res.error);
+                if (res.sent) { toast(`ส่ง QR ${baht(res.due)} เข้าแชท LINE แล้ว`, true); return; }
+                await copy(res.text, "คัดลอกรายละเอียดชำระเงินแล้ว");
+                window.open(res.qr, "_blank");
+              })}>💳 ส่ง QR ชำระเงิน{r.lineUserId ? " (LINE)" : " (คัดลอก)"}</button>
+            )}
+          </div>
+          {r.attachments.length > 0 && <div className="mt-2.5 text-[12.5px] flex gap-1.5 flex-wrap items-center"><span className="text-ink-soft">สลิปจากลูกค้า:</span>{r.attachments.map((a) => <a key={a.id} className="chip chip-teal" href={`/api/files/${a.id}`} target="_blank" rel="noopener">🧾 {new Date().toLocaleDateString("th-TH")}</a>)}</div>}
         </section>
 
         {/* บันทึก */}

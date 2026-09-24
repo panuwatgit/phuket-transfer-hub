@@ -8,7 +8,7 @@ const adminIds = () =>
     .map((s) => s.trim())
     .filter(Boolean);
 
-type Message = { type: "text"; text: string };
+export type Message = { type: "text"; text: string } | { type: "image"; originalContentUrl: string; previewImageUrl: string };
 
 async function send(path: "push" | "multicast", body: Record<string, unknown>) {
   const res = await fetch(`${API}/${path}`, {
@@ -39,17 +39,30 @@ export async function notifyAdmins(text: string) {
 
 /** ส่งข้อความหาลูกค้าที่ผูก userId แล้ว (หลัง webhook จับคู่) */
 export async function pushToUser(userId: string, text: string) {
+  return pushMessages(userId, [{ type: "text", text }]);
+}
+
+/** ส่งได้หลายข้อความในครั้งเดียว (เช่น ข้อความ + รูป QR) */
+export async function pushMessages(userId: string, messages: Message[]) {
   if (!token()) {
-    console.log(`[line] (not configured) would push to ${userId}:\n${text}`);
+    console.log(`[line] (not configured) would push to ${userId}:`, JSON.stringify(messages).slice(0, 300));
     return false;
   }
   try {
-    await send("push", { to: userId, messages: [{ type: "text", text }] });
+    await send("push", { to: userId, messages });
     return true;
   } catch (e) {
-    console.error("[line] pushToUser failed", e);
+    console.error("[line] push failed", e);
     return false;
   }
+}
+
+/** ดาวน์โหลดไฟล์ที่ลูกค้าส่งมาในแชท (เช่น สลิปโอนเงิน) */
+export async function getMessageContent(messageId: string) {
+  if (!token()) return null;
+  const res = await fetch(`https://api-data.line.me/v2/bot/message/${messageId}/content`, { headers: { Authorization: `Bearer ${token()}` } });
+  if (!res.ok) { console.error("[line] getMessageContent", res.status); return null; }
+  return { data: new Uint8Array(await res.arrayBuffer()), mime: res.headers.get("content-type") || "image/jpeg" };
 }
 
 /** ตรวจ X-Line-Signature ของ webhook (HMAC-SHA256 ด้วย channel secret) */

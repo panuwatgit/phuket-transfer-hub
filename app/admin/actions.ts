@@ -346,3 +346,51 @@ export async function deleteAttachment(id: number) {
   if (a.expenseId) { const e = await prisma.expense.findUnique({ where: { id: a.expenseId } }); if (e?.requestId) refresh(e.requestId); }
   revalidatePath("/admin/reports");
 }
+
+// ── payment: ส่งยอด + QR PromptPay เข้าแชท ────────────────────────────────
+import { paySig, promptPayConfigured, promptPayId, promptPayName } from "@/lib/promptpay";
+import { pushMessages } from "@/lib/line";
+
+/** ยอดที่ต้องเก็บตอนนี้ (เต็ม / มัดจำ 50% / วางบิล) หักที่รับแล้ว */
+export function amountDue(r: { sellPrice: number | null; serviceType: string; days: number | null; otHours: number; otRate: number; paymentTerm: string; amountPaid: number }) {
+  const total = jobTotal(r as never);
+  if (r.paymentTerm === "CREDIT") return { total, due: 0, label: "วางบิล" };
+  const target = r.paymentTerm === "DEPOSIT_50" ? Math.round(total * 0.5) : total;
+  return { total, due: Math.max(0, target - r.amountPaid), label: r.paymentTerm === "DEPOSIT_50" ? "มัดจำ 50%" : "ชำระเต็ม" };
+}
+
+export async function sendPaymentDetails(id: number) {
+  await requireAdmin();
+  const r = await prisma.bookingRequest.findUniqueOrThrow({ where: { id } });
+  if (!r.sellPrice) return { ok: false as const, error: "ตั้งราคาขายก่อน" };
+  if (!promptPayConfigured()) return { ok: false as const, error: "ยังไม่ได้ตั้ง PROMPTPAY_ID ใน Railway" };
+  const { total, due, label } = amountDue(r);
+  if (due <= 0) return { ok: false as const, error: r.paymentTerm === "CREDIT" ? "ลูกค้าวางบิล ไม่ต้องส่ง QR" : "รับชำระครบแล้ว" };
+
+  const en = r.lang === "en";
+  const qr = `${BRAND.siteUrl}/api/pay/qr?code=${encodeURIComponent(r.code)}&amount=${due}&sig=${paySig(r.code, due)}`;
+  const text = (en
+    ? [
+        `Thanks ${r.customerName}! Booking #${r.code} is confirmed ✅`,
+        `Amount due: ${baht(due)}${total !== due ? ` (${label}, total ${baht(total)})` : ""}`,
+        `PromptPay: ${promptPayId()} (${promptPayName()})`,
+        `Scan the QR below, then send the slip in this chat and we'll confirm right away.`,
+      ]
+    : [
+        `ขอบคุณครับคุณ${r.customerName} ✅ ยืนยันงาน #${r.code} แล้ว`,
+        `ยอดที่ต้องชำระ: ${baht(due)}${total !== due ? ` (${label} จากยอดรวม ${baht(total)})` : ""}`,
+        `PromptPay: ${promptPayId()} (${promptPayName()})`,
+        `สแกน QR ด้านล่างได้เลย โอนแล้วส่งสลิปในแชทนี้ เดี๋ยวยืนยันให้ทันทีครับ`,
+      ]).join("\n");
+
+  const sent = r.lineUserId ? await pushMessages(r.lineUserId, [{ type: "text", text }, { type: "image", originalContentUrl: qr, previewImageUrl: qr }]) : false;
+  await prisma.bookingRequest.update({
+    where: { id },
+    data: {
+      status: r.status === "QUOTED" ? "CONFIRMED" : r.status,
+      statusLogs: { create: { fromStatus: r.status, toStatus: r.status === "QUOTED" ? "CONFIRMED" : r.status, note: sent ? `ส่ง QR PromptPay ${baht(due)} ทาง LINE` : `เตรียมรายละเอียดชำระเงิน ${baht(due)} (ส่งเอง)` } },
+    },
+  });
+  refresh(id);
+  return { ok: true as const, sent, text, qr, due };
+}
