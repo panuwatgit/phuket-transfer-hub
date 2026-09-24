@@ -61,9 +61,10 @@ export async function createRequest(input: RequestInput): Promise<CreateResult> 
         contactChannel: d.contactChannel,
         customerNote: d.customerNote || null,
         paymentTerm: d.company ? "CREDIT" : defaultPaymentTerm(d.serviceType, d.dropoffProvince),
-        lineUserId: lp?.friend ? lp.userId : null,
-        lineLinkedAt: lp?.friend ? new Date() : null,
-        statusLogs: { create: [{ toStatus: "NEW", note: "ลูกค้าส่งฟอร์ม", actor: "customer" }, ...(lp?.friend ? [{ toStatus: "NEW" as const, note: `เชื่อม LINE ตอนกรอกฟอร์ม (${lp.displayName})`, actor: "customer" }] : [])] },
+        // เก็บ userId ไว้เสมอเมื่อเชื่อม LINE แล้ว — สถานะ "เป็นเพื่อน" อาจยังไม่อัปเดตทันทีที่เพิ่งกดเพิ่มเพื่อน
+        lineUserId: lp?.userId ?? null,
+        lineLinkedAt: lp ? new Date() : null,
+        statusLogs: { create: [{ toStatus: "NEW", note: "ลูกค้าส่งฟอร์ม", actor: "customer" }, ...(lp ? [{ toStatus: "NEW" as const, note: `เชื่อม LINE ตอนกรอกฟอร์ม (${lp.displayName}${lp.friend ? "" : " — ยังไม่ยืนยันเป็นเพื่อน"})`, actor: "customer" }] : [])] },
       },
     });
     return r;
@@ -74,8 +75,8 @@ export async function createRequest(input: RequestInput): Promise<CreateResult> 
   const dict = getDict(d.lang);
   await Promise.all([
     notifyAdmins(adminText),
-    // ลูกค้าเชื่อม LINE + เป็นเพื่อน OA แล้ว → ส่งสรุปเข้าแชทเขาทันที (นับโควตา push)
-    lp?.friend ? pushToUser(lp.userId, `${dict.success.sub(BRAND.replyMinutes, dict.hoursText)}\n\n${customerMessage(created)}`) : Promise.resolve(false),
+    // ลูกค้าเชื่อม LINE แล้ว → ลองส่งสรุปเข้าแชทเลย (ถ้ายังไม่ได้เพิ่มเพื่อนจริง LINE จะปฏิเสธ แล้วเราค่อยส่งเองทีหลัง)
+    lp ? pushToUser(lp.userId, `${dict.success.sub(BRAND.replyMinutes, dict.hoursText)}\n\n${customerMessage(created)}`) : Promise.resolve(false),
     sendEmail(BRAND.email, `ขอราคาใหม่ #${created.code}`, adminText),
     created.email ? sendEmail(created.email, dict.success.mailSubject(created.code), `${dict.success.sub(BRAND.replyMinutes, dict.hoursText)}\n\n${customerMessage(created)}`) : Promise.resolve(false),
   ]);

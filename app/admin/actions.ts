@@ -116,7 +116,7 @@ export async function sendQuoteViaLine(id: number) {
     where: { id },
     data: {
       status: r.status === "NEW" || r.status === "SOURCING" ? "QUOTED" : r.status,
-      statusLogs: { create: { fromStatus: r.status, toStatus: "QUOTED", note: sent ? `ส่งราคา ${baht(r.sellPrice)} ทาง LINE` : `ตั้งเป็นเสนอราคาแล้ว (${baht(r.sellPrice)}) — ${r.lineUserId ? "LINE ส่งไม่สำเร็จ" : "ลูกค้ายังไม่ผูก LINE ส่งเอง"}` } },
+      statusLogs: { create: { fromStatus: r.status, toStatus: "QUOTED", note: sent ? `ส่งราคา ${baht(r.sellPrice)} ทาง LINE` : `ตั้งเป็นเสนอราคาแล้ว (${baht(r.sellPrice)}) — ${r.lineUserId ? "LINE ปฏิเสธการส่ง (ลูกค้าอาจยังไม่ได้เพิ่มเพื่อน/บล็อก) คัดลอกส่งเอง" : "ลูกค้ายังไม่ผูก LINE ส่งเอง"}` } },
     },
   });
   refresh(id);
