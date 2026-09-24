@@ -5,9 +5,11 @@ import type { VehicleType, ServiceType, RequestStatus, PaymentTerm } from "@pris
  *  (กัน build พังถ้าใส่ค่าผิดรูปแบบ และไม่ต้องตั้งตัวแปรเองตอน deploy บน Railway) */
 function resolveSiteUrl() {
   const clean = (v: string | undefined) => (v ?? "").trim().replace(/\/+$/, "");
-  const explicit = clean(process.env.NEXT_PUBLIC_SITE_URL);
-  if (explicit) {
-    try { new URL(explicit); return explicit; } catch { console.warn(`[config] NEXT_PUBLIC_SITE_URL ไม่ถูกต้อง: ${explicit} — ใช้ค่าอื่นแทน`); }
+  const raw = clean(process.env.NEXT_PUBLIC_SITE_URL);
+  if (raw) {
+    // ใส่มาแบบไม่มี https:// ก็เติมให้ (localhost ใช้ http)
+    const explicit = /^https?:\/\//.test(raw) ? raw : `${raw.startsWith("localhost") ? "http" : "https"}://${raw}`;
+    try { new URL(explicit); return explicit; } catch { console.warn(`[config] NEXT_PUBLIC_SITE_URL ไม่ถูกต้อง: ${raw} — ใช้ค่าอื่นแทน`); }
   }
   const railway = clean(process.env.RAILWAY_PUBLIC_DOMAIN);
   if (railway) return railway.startsWith("http") ? railway : `https://${railway}`;
