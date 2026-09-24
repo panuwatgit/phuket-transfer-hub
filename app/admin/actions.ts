@@ -352,7 +352,7 @@ import { paySig, promptPayConfigured, promptPayId, promptPayName } from "@/lib/p
 import { pushMessages } from "@/lib/line";
 
 /** ยอดที่ต้องเก็บตอนนี้ (เต็ม / มัดจำ 50% / วางบิล) หักที่รับแล้ว */
-export function amountDue(r: { sellPrice: number | null; serviceType: string; days: number | null; otHours: number; otRate: number; paymentTerm: string; amountPaid: number }) {
+function amountDue(r: { sellPrice: number | null; serviceType: string; days: number | null; otHours: number; otRate: number; paymentTerm: string; amountPaid: number }) {
   const total = jobTotal(r as never);
   if (r.paymentTerm === "CREDIT") return { total, due: 0, label: "วางบิล" };
   const target = r.paymentTerm === "DEPOSIT_50" ? Math.round(total * 0.5) : total;
