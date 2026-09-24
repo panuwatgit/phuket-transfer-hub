@@ -1,6 +1,12 @@
 // ค่าคงที่ของธุรกิจ — แก้ที่นี่ที่เดียว (ดู PLAN.md)
 import type { VehicleType, ServiceType, RequestStatus, PaymentTerm } from "@prisma/client";
 
+/** กัน build พังถ้า NEXT_PUBLIC_SITE_URL ใส่ผิดรูปแบบ (เช่นยังเป็น placeholder) */
+function safeUrl(v: string | undefined, fallback: string) {
+  const s = (v ?? "").trim().replace(/\/+$/, "");
+  try { new URL(s); return s; } catch { if (s) console.warn(`[config] NEXT_PUBLIC_SITE_URL ไม่ถูกต้อง: ${s} — ใช้ ${fallback} แทน`); return fallback; }
+}
+
 export const BRAND = {
   name: "Phuket Transfer Hub",
   short: "PTH",
@@ -17,7 +23,7 @@ export const BRAND = {
   googleRating: "", // เช่น "4.9" — ว่าง = ไม่โชว์
   hours: "08:00–22:00 ทุกวัน",
   replyMinutes: 30,
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3100",
+  siteUrl: safeUrl(process.env.NEXT_PUBLIC_SITE_URL, "http://localhost:3100"),
 };
 
 export const lineAddFriendUrl = () => BRAND.lineAddUrl;
