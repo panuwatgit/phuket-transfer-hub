@@ -1,10 +1,17 @@
 // ค่าคงที่ของธุรกิจ — แก้ที่นี่ที่เดียว (ดู PLAN.md)
 import type { VehicleType, ServiceType, RequestStatus, PaymentTerm } from "@prisma/client";
 
-/** กัน build พังถ้า NEXT_PUBLIC_SITE_URL ใส่ผิดรูปแบบ (เช่นยังเป็น placeholder) */
-function safeUrl(v: string | undefined, fallback: string) {
-  const s = (v ?? "").trim().replace(/\/+$/, "");
-  try { new URL(s); return s; } catch { if (s) console.warn(`[config] NEXT_PUBLIC_SITE_URL ไม่ถูกต้อง: ${s} — ใช้ ${fallback} แทน`); return fallback; }
+/** URL ของเว็บ: NEXT_PUBLIC_SITE_URL → โดเมนที่ Railway ให้อัตโนมัติ → localhost
+ *  (กัน build พังถ้าใส่ค่าผิดรูปแบบ และไม่ต้องตั้งตัวแปรเองตอน deploy บน Railway) */
+function resolveSiteUrl() {
+  const clean = (v: string | undefined) => (v ?? "").trim().replace(/\/+$/, "");
+  const explicit = clean(process.env.NEXT_PUBLIC_SITE_URL);
+  if (explicit) {
+    try { new URL(explicit); return explicit; } catch { console.warn(`[config] NEXT_PUBLIC_SITE_URL ไม่ถูกต้อง: ${explicit} — ใช้ค่าอื่นแทน`); }
+  }
+  const railway = clean(process.env.RAILWAY_PUBLIC_DOMAIN);
+  if (railway) return railway.startsWith("http") ? railway : `https://${railway}`;
+  return "http://localhost:3100";
 }
 
 export const BRAND = {
@@ -23,7 +30,7 @@ export const BRAND = {
   googleRating: "", // เช่น "4.9" — ว่าง = ไม่โชว์
   hours: "08:00–22:00 ทุกวัน",
   replyMinutes: 30,
-  siteUrl: safeUrl(process.env.NEXT_PUBLIC_SITE_URL, "http://localhost:3100"),
+  siteUrl: resolveSiteUrl(),
 };
 
 export const lineAddFriendUrl = () => BRAND.lineAddUrl;

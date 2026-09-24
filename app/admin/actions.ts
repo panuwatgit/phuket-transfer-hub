@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import type { PaymentTerm, RequestStatus, VehicleType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { checkPassword, createSession, destroySession, requireAdmin } from "@/lib/auth";
-import { STATUS_ORDER, VEHICLES } from "@/lib/config";
+import { BRAND, STATUS_ORDER, VEHICLES } from "@/lib/config";
 import { pushToUser } from "@/lib/line";
 import { baht } from "@/lib/format";
 import { getDict } from "@/lib/i18n";
@@ -254,7 +254,7 @@ export async function issueDocument(
   }
   await prisma.statusLog.create({ data: { requestId, fromStatus: r.status, toStatus: r.status, note: `ออก${DOC_LABEL[type].short} ${doc.number}${type === "RECEIPT" ? ` ยอด ${baht(amountPaid)}` : ""}` } });
   refresh(requestId);
-  return { ok: true as const, id: doc.id, number: doc.number, url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3100"}/doc/${doc.token}` };
+  return { ok: true as const, id: doc.id, number: doc.number, url: `${BRAND.siteUrl}/doc/${doc.token}` };
 }
 
 export async function voidDocument(id: number) {
@@ -269,7 +269,7 @@ export async function voidDocument(id: number) {
 export async function sendDocumentLink(id: number) {
   await requireAdmin();
   const d = await prisma.document.findUniqueOrThrow({ where: { id }, include: { request: true } });
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3100"}/doc/${d.token}`;
+  const url = `${BRAND.siteUrl}/doc/${d.token}`;
   const en = d.lang === "en";
   const text = en
     ? `${DOC_LABEL[d.type].en} ${d.number} for request #${d.request.code}\n${url}\nTap to view or save as PDF. — Phuket Transfer Hub`
