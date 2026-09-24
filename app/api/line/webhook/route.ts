@@ -11,6 +11,7 @@ type LineEvent = {
 };
 
 const CONFIRM_RE = /^(ยืนยัน|คอนเฟิร์ม|ตกลง|confirm|confirmed|ok)\b/i;
+const ASK_RE = /(ขอปรับเปลี่ยน|สอบถาม|change something|have a question)/i;
 
 /** งานล่าสุดของลูกค้าคนนี้ที่ยังไม่จบ */
 async function activeRequestOf(userId: string) {
@@ -70,11 +71,17 @@ export async function POST(req: Request) {
     const code = text.match(REQUEST_CODE_RE)?.[0]?.toUpperCase();
     if (!code) {
       // ตอบ "ยืนยัน" ในแชท → เตือนแอดมินให้ส่งรายละเอียดชำระเงิน
-      if (CONFIRM_RE.test(text.trim())) {
+      const msg = text.trim();
+      const isConfirm = CONFIRM_RE.test(msg), isAsk = ASK_RE.test(msg);
+      if (isConfirm || isAsk) {
         const r = await activeRequestOf(userId);
         if (r) {
-          await prisma.statusLog.create({ data: { requestId: r.id, fromStatus: r.status, toStatus: r.status, note: `ลูกค้าตอบ "${text.trim().slice(0, 40)}" ในแชท`, actor: "customer" } });
-          await notifyAdmins(`✅ ลูกค้ายืนยันแล้ว — #${r.code} (${r.customerName})\nส่ง QR ชำระเงินได้เลย\n${BRAND.siteUrl}/admin/requests/${r.id}`);
+          await prisma.statusLog.create({ data: { requestId: r.id, fromStatus: r.status, toStatus: r.status, note: `ลูกค้าตอบ "${msg.slice(0, 60)}" ในแชท`, actor: "customer" } });
+          await notifyAdmins(
+            isConfirm
+              ? `✅ ลูกค้ายืนยันแล้ว — #${r.code} (${r.customerName})\nส่ง QR ชำระเงินได้เลย\n${BRAND.siteUrl}/admin/requests/${r.id}`
+              : `💬 ลูกค้าถาม/ขอแก้ไข — #${r.code} (${r.customerName})\n“${msg.slice(0, 80)}”\n${BRAND.siteUrl}/admin/requests/${r.id}`,
+          );
         }
       }
       continue;

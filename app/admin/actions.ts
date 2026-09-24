@@ -94,7 +94,8 @@ export async function sendQuoteViaLine(id: number) {
   const r = await prisma.bookingRequest.findUniqueOrThrow({ where: { id } });
   if (!r.sellPrice) return { ok: false, error: "ใส่ราคาขายก่อน" };
   const charter = r.serviceType === "DAILY_CHARTER" || r.serviceType === "MULTI_DAY";
-  const text = (r.lang === "en"
+  const en = r.lang === "en";
+  const text = (en
     ? [
         `Hi ${r.customerName}, this is Phuket Transfer Hub 🙏`,
         `Request #${r.code} — ${getDict("en").vehicle[r.vehicleType].name}${r.vehicleCount > 1 ? ` × ${r.vehicleCount} cars` : ""}`,
@@ -111,7 +112,13 @@ export async function sendQuoteViaLine(id: number) {
           : `ราคา ${baht(r.sellPrice)} ต่อเที่ยว (รวมน้ำมัน)`,
         `ถ้าตกลง แจ้ง "ยืนยัน" ได้เลย เดี๋ยวส่งรายละเอียดการชำระเงินให้ครับ`,
       ]).join("\n");
-  const sent = r.lineUserId ? await pushToUser(r.lineUserId, text) : false;
+  // ปุ่มกดตอบ (Quick Reply) — ลูกค้าไม่ต้องพิมพ์เอง ข้อความจะตรงกับที่ระบบรู้จักเสมอ
+  const qr = quickReply(
+    en
+      ? [{ type: "message", label: "✅ Confirm", text: "confirm" }, { type: "message", label: "✏️ Change something", text: "I'd like to change something" }, { type: "message", label: "❓ Ask a question", text: "I have a question" }]
+      : [{ type: "message", label: "✅ ยืนยัน", text: "ยืนยัน" }, { type: "message", label: "✏️ ขอปรับเปลี่ยน", text: "ขอปรับเปลี่ยนรายละเอียด" }, { type: "message", label: "❓ สอบถามเพิ่ม", text: "ขอสอบถามเพิ่มครับ" }],
+  );
+  const sent = r.lineUserId ? await pushMessages(r.lineUserId, [{ type: "text", text, quickReply: qr }]) : false;
   await prisma.bookingRequest.update({
     where: { id },
     data: {
@@ -349,7 +356,7 @@ export async function deleteAttachment(id: number) {
 
 // ── payment: ส่งยอด + QR PromptPay เข้าแชท ────────────────────────────────
 import { paySig, promptPayConfigured, promptPayId, promptPayName } from "@/lib/promptpay";
-import { pushMessages } from "@/lib/line";
+import { pushMessages, quickReply } from "@/lib/line";
 
 /** ยอดที่ต้องเก็บตอนนี้ (เต็ม / มัดจำ 50% / วางบิล) หักที่รับแล้ว */
 function amountDue(r: { sellPrice: number | null; serviceType: string; days: number | null; otHours: number; otRate: number; paymentTerm: string; amountPaid: number }) {
@@ -383,7 +390,12 @@ export async function sendPaymentDetails(id: number) {
         `สแกน QR ด้านล่างได้เลย โอนแล้วส่งสลิปในแชทนี้ เดี๋ยวยืนยันให้ทันทีครับ`,
       ]).join("\n");
 
-  const sent = r.lineUserId ? await pushMessages(r.lineUserId, [{ type: "text", text }, { type: "image", originalContentUrl: qr, previewImageUrl: qr }]) : false;
+  const payQuick = quickReply(
+    en
+      ? [{ type: "cameraRoll", label: "📎 Send slip" }, { type: "camera", label: "📷 Take photo" }, { type: "message", label: "❓ Ask", text: "I have a question about payment" }]
+      : [{ type: "cameraRoll", label: "📎 ส่งสลิป" }, { type: "camera", label: "📷 ถ่ายสลิป" }, { type: "message", label: "❓ สอบถาม", text: "สอบถามเรื่องการชำระเงินครับ" }],
+  );
+  const sent = r.lineUserId ? await pushMessages(r.lineUserId, [{ type: "text", text }, { type: "image", originalContentUrl: qr, previewImageUrl: qr, quickReply: payQuick }]) : false;
   await prisma.bookingRequest.update({
     where: { id },
     data: {

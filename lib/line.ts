@@ -8,7 +8,17 @@ const adminIds = () =>
     .map((s) => s.trim())
     .filter(Boolean);
 
-export type Message = { type: "text"; text: string } | { type: "image"; originalContentUrl: string; previewImageUrl: string };
+export type QuickReplyAction =
+  | { type: "message"; label: string; text: string }
+  | { type: "cameraRoll"; label: string }
+  | { type: "camera"; label: string }
+  | { type: "uri"; label: string; uri: string };
+export type QuickReply = { items: { type: "action"; action: QuickReplyAction }[] };
+export type Message =
+  | { type: "text"; text: string; quickReply?: QuickReply }
+  | { type: "image"; originalContentUrl: string; previewImageUrl: string; quickReply?: QuickReply };
+
+export const quickReply = (actions: QuickReplyAction[]): QuickReply => ({ items: actions.map((action) => ({ type: "action" as const, action })) });
 
 async function send(path: "push" | "multicast", body: Record<string, unknown>) {
   const res = await fetch(`${API}/${path}`, {
