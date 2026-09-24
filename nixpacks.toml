@@ -1,16 +1,14 @@
 # Railway/Nixpacks: corepack ที่มากับ Node 24 รัน pnpm 11 ไม่ได้
-# (ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING) → ปิด corepack แล้วลง pnpm ผ่าน npm ตรง ๆ
+# (ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING) และ npm i -g ไม่เข้า PATH ของ phase ถัดไป
+# → เรียก pnpm ผ่าน npx ระบุเวอร์ชันตรงกับ lockfile
 [phases.install]
 dependsOn = ["setup"]
-cmds = [
-  "corepack disable || true",
-  "npm i -g pnpm@11.9.0",
-  "pnpm install --frozen-lockfile",
-]
+cmds = ["npx --yes pnpm@11.9.0 install --frozen-lockfile"]
 
 [phases.build]
 dependsOn = ["install"]
-cmds = ["pnpm build"]
+cmds = ["npx --yes pnpm@11.9.0 run build"]
 
+# ตอนรันจริงใช้ไบนารีใน node_modules ตรง ๆ ไม่ต้องมี pnpm
 [start]
-cmd = "pnpm start"
+cmd = "node_modules/.bin/next start -p ${PORT:-3000}"
