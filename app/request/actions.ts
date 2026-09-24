@@ -5,7 +5,7 @@ import { requestSchema, type RequestInput } from "@/lib/validation";
 import { nextRequestCode } from "@/lib/request-code";
 import { defaultPaymentTerm, isCharter, BRAND } from "@/lib/config";
 import { notifyAdmins, pushToUser } from "@/lib/line";
-import { getLineProfile } from "@/lib/line-login";
+import { getLineProfile, loginConfigured } from "@/lib/line-login";
 import { adminNotifyText, customerMessage } from "@/lib/request-view";
 import { sendEmail } from "@/lib/email";
 import { getDict } from "@/lib/i18n";
@@ -30,6 +30,9 @@ export async function createRequest(input: RequestInput): Promise<CreateResult> 
 
   const charter = isCharter(d.serviceType);
   const lp = await getLineProfile(); // เชื่อม LINE ไว้ในฟอร์ม → รู้ userId ตั้งแต่ตอนส่ง
+  // ฟอร์มไทยบังคับเชื่อม LINE (กันกรณีข้าม UI มา) — ปิดได้ด้วย LINE_REQUIRED=0
+  const lineRequired = d.lang === "th" && loginConfigured() && process.env.LINE_REQUIRED !== "0";
+  if (lineRequired && !lp) return { ok: false, errors: { line: "กรุณาเชื่อม LINE ก่อนส่งคำขอ" } };
   const created = await prisma.$transaction(async (tx) => {
     const code = await nextRequestCode(tx);
     const r = await tx.bookingRequest.create({

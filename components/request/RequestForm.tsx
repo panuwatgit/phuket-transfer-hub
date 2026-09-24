@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { ServiceType, VehicleType } from "@prisma/client";
-import { CHARTER, PROVINCES, SERVICE_ORDER, VEHICLES, VEHICLE_ORDER, VEHICLE_IMAGE, defaultPaymentTerm, isCharter } from "@/lib/config";
+import { BRAND, CHARTER, PROVINCES, SERVICE_ORDER, VEHICLES, VEHICLE_ORDER, VEHICLE_IMAGE, defaultPaymentTerm, isCharter } from "@/lib/config";
 import Image from "next/image";
 import { addHours } from "@/lib/format";
 import { fmtDate, getDict, href, type Lang } from "@/lib/i18n";
@@ -63,6 +63,8 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
   const [pending, start] = useTransition();
   const set = <K extends keyof State>(k: K, v: State[K]) => { setS((p) => ({ ...p, [k]: v })); setErrors((e) => { const rest = { ...e }; delete rest[k as string]; return rest; }); };
 
+  // หน้าไทย: บังคับเชื่อม LINE ก่อนส่ง (เพื่อส่งราคา/คนขับ/ใบเสร็จเข้าแชทได้)
+  const lineRequired = lineEnabled && lang === "th";
   const charter = s.serviceType ? isCharter(s.serviceType) : false;
   const pickupPlace = s.serviceType === "AIRPORT" ? s.apPlace : s.serviceType === "POINT_TO_POINT" ? s.p2pFrom : s.chPlace;
   const route = useMemo(() => {
@@ -103,6 +105,7 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
       if (!s.name.trim()) e.name = f.s3.nameErr;
       if (!/^(0\d{8,9}|\+?[1-9]\d{6,14})$/.test(s.phone.replace(/[-\s().]/g, ""))) e.phone = f.s3.phoneErr;
       if (s.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim())) e.email = f.s3.emailErr;
+      if (lineRequired && !line) e.line = f.s3.lineRequiredErr;
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -155,8 +158,12 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
           ) : (
             <>
               <span className="text-2xl">💬</span>
-              <div className="min-w-0 flex-1"><b className="kanit font-medium block leading-tight">{f.s3.lineConnect}</b><small className="text-ink-soft">{f.s3.lineWhy}</small></div>
+              <div className="min-w-0 flex-1">
+                <b className="kanit font-medium block leading-tight">{f.s3.lineConnect}{lineRequired && <span className="ml-2 align-middle text-[11px] font-normal bg-coral-wash text-coral-deep px-2 py-0.5 rounded-full font-[family-name:var(--font-body)]">{f.s3.lineBadge}</span>}</b>
+                <small className="text-ink-soft">{lineRequired ? f.s3.lineRequiredHint : f.s3.lineWhy}</small>
+              </div>
               <button type="button" className="btn btn-line btn-sm !rounded-full" onClick={connectLine}>{f.s3.lineConnectBtn}</button>
+              {lineRequired && <a className="basis-full text-[12.5px] text-ink-faint hover:text-teal-deep" href={`tel:${BRAND.phone.replace(/-/g, "")}`}>{f.s3.lineCallInstead(BRAND.phone)}</a>}
             </>
           )}
           {errors.line && <div className="emsg basis-full">{errors.line}</div>}
@@ -301,7 +308,7 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
 
           <div className="flex justify-between gap-3 px-7 py-5 border-t border-line">
             <button type="button" className="btn btn-ghost" style={{ visibility: step > 1 ? "visible" : "hidden" }} onClick={() => setStep(step - 1)}>{f.back}</button>
-            <button type="button" className="btn btn-primary min-w-[180px]" onClick={next} disabled={pending}>{pending ? f.sending : step === 3 ? f.submit : f.next}</button>
+            <button type="button" className="btn btn-primary min-w-[180px]" onClick={next} disabled={pending || (step === 3 && lineRequired && !line)} title={step === 3 && lineRequired && !line ? f.s3.lineRequiredErr : ""}>{pending ? f.sending : step === 3 ? f.submit : f.next}</button>
           </div>
         </div>
 
