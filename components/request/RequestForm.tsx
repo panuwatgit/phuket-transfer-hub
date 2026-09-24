@@ -57,7 +57,8 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
   }, []);
   const connectLine = () => {
     try { sessionStorage.setItem("pth-form", JSON.stringify(s)); } catch { /* ignore */ }
-    const ret = href(lang, "/request");
+    const qs = typeof window !== "undefined" ? window.location.search.replace(/[?&]line=[^&]*/g, "").replace(/^&/, "?") : "";
+    const ret = `${href(lang, "/request")}${qs}`;
     window.location.assign(new URL(`/api/line/login?lang=${lang}&return=${encodeURIComponent(ret)}`, window.location.origin).toString());
   };
   const [pending, start] = useTransition();
@@ -144,6 +145,27 @@ export function RequestForm({ lang, prefill, line, lineEnabled }: { lang: Lang; 
   ];
   const labels = f.summary.labels;
   const channels: ContactChannel[] = lang === "en" ? ["WHATSAPP", "EMAIL", "PHONE"] : ["LINE", "PHONE"];
+
+  // หน้าไทย: ต้องเชื่อม LINE ก่อนถึงจะเห็นฟอร์ม
+  if (lineRequired && !line) {
+    return (
+      <div className="max-w-[640px] mx-auto">
+        <div className="card p-8 text-center">
+          <div className="w-16 h-16 rounded-[22px] bg-[#06C755] grid place-items-center mx-auto mb-4 text-3xl">💬</div>
+          <h2 className="text-[22px] font-semibold mb-1.5">{f.s3.gateTitle}</h2>
+          <p className="text-ink-soft text-[15px] mb-6">{f.s3.gateSub}</p>
+          <ul className="text-left grid gap-2.5 text-[14.5px] mb-7 max-w-[440px] mx-auto">
+            {f.s3.gateWhy.map((w) => <li key={w} className="flex gap-2.5"><span className="text-teal font-bold shrink-0">✓</span>{w}</li>)}
+          </ul>
+          <button type="button" className="btn btn-line !text-lg !px-8 !py-4" onClick={connectLine}>{f.s3.lineConnectBtn}</button>
+          {errors.line && <div className="emsg">{errors.line}</div>}
+          <div className="mt-5 text-[13px] text-ink-faint">
+            <a className="hover:text-teal-deep" href={`tel:${BRAND.phone.replace(/-/g, "")}`}>{f.s3.lineCallInstead(BRAND.phone)}</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
